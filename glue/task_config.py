@@ -14,12 +14,13 @@ SPLIT_MAPPING = {
 }
 
 INDEX_MAPPING = {
-    # each one contains three values, sentence 1 index, sentence 2 index, label index, -1 means abstain
+    # each one contains three values:
+    # sentence 1 index, sentence 2 index, label index, -1 means abstain
     "CoLA": {"train": [3, -1, 1], "dev": [3, -1, 1], "test": [1, -1, -1]},
     "MNLI": {"train": [8, 9, 11], "dev": [8, 9, 15], "test": [8, 9, -1]},
     "MNLI_matched": {"train": [8, 9, 11], "dev": [8, 9, 15], "test": [8, 9, -1]},
     "MNLI_unmatched": {"train": [8, 9, 11], "dev": [8, 9, 15], "test": [8, 9, -1]},
-    "MRPC": {"train": [3, 4, 0], "dev": [3, 4, 0], "test": [3, 4, 0]},
+    "MRPC": {"train": [3, 4, 0], "dev": [3, 4, 0], "test": [3, 4, -1]},
     "QNLI": {"train": [1, 2, 3], "dev": [1, 2, 3], "test": [1, 2, -1]},
     "QQP": {"train": [3, 4, 5], "dev": [3, 4, 5], "test": [1, 2, -1]},
     "RTE": {"train": [1, 2, 3], "dev": [1, 2, 3], "test": [1, 2, -1]},

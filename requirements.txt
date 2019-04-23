@@ -1,0 +1,3 @@
+# emmental # emmental is not a pypi package right now, will upload it soon
+jupyter
+matplotlib

@@ -1,16 +1,15 @@
-import os
 import codecs
 import logging
+import os
 
+import numpy as np
 from pytorch_pretrained_bert import BertTokenizer
-from pytorch_pretrained_bert.tokenization import BertTokenizer
-
 
 from task_config import (
-    SPLIT_MAPPING,
     INDEX_MAPPING,
-    SKIPPING_HEADER_MAPPING,
     LABEL_MAPPING,
+    SKIPPING_HEADER_MAPPING,
+    SPLIT_MAPPING,
 )
 
 try:
@@ -33,16 +32,18 @@ def preprocessor(
     data_dir,
     task_name,
     split,
-    bert_model="bert-large-uncased",
+    bert_model_name="bert-base-uncased",
     max_data_samples=None,
     max_sequence_length=128,
 ):
 
     sentences, labels = parse_tsv(data_dir, task_name, split, max_data_samples)
 
-    do_lower_case = "uncased" in bert_model
+    do_lower_case = "uncased" in bert_model_name
 
-    tokenizer = BertTokenizer.from_pretrained(bert_model, do_lower_case=do_lower_case)
+    tokenizer = BertTokenizer.from_pretrained(
+        bert_model_name, do_lower_case=do_lower_case
+    )
 
     bert_token_ids = []
     bert_token_masks = []
@@ -100,7 +101,7 @@ def preprocessor(
         bert_token_masks.append(token_masks)
         bert_token_segments.append(token_segments)
 
-    return bert_token_ids, bert_token_segments, bert_token_masks
+    return bert_token_ids, bert_token_segments, bert_token_masks, labels
 
 
 def parse_tsv(data_dir, task_name, split, max_data_samples=None):
@@ -142,7 +143,7 @@ def parse_tsv(data_dir, task_name, split, max_data_samples=None):
                 if LABEL_MAPPING[task_name] is not None:
                     label = LABEL_MAPPING[task_name][row[label_idx]]
                 else:
-                    label = row[label_idx]
+                    label = np.float32(row[label_idx])
             else:
                 label = -1
 
@@ -171,11 +172,18 @@ if __name__ == "__main__":
 
     splits = ["train", "dev", "test"]
 
+    data_dir = "data"
+
     for task_name in task_names:
         for split in splits:
             print(task_name, split)
-            # sentences, labels = parse_tsv("data", task_name, split, max_data_samples=2)
-            # print(sentences, labels)
-            # sentences, labels = parse_tsv("data", task_name, split)
-
-            preprocessor(data_dir, task_name, split, bert_model="bert-large-uncased", max_data_samples=2, max_sequence_length=20)
+            print(
+                preprocessor(
+                    data_dir,
+                    task_name,
+                    split,
+                    bert_model="bert-base-uncased",
+                    max_data_samples=2,
+                    max_sequence_length=20,
+                )
+            )

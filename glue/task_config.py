@@ -1,8 +1,20 @@
 SPLIT_MAPPING = {
     "CoLA": {"train": "train.tsv", "dev": "dev.tsv", "test": "test.tsv"},
-    "MNLI": {"train": "train.tsv", "dev": "dev_matched.tsv", "test": "test_matched.tsv"},
-    "MNLI_matched": {"train": "train.tsv", "dev": "dev_matched.tsv", "test": "test_matched.tsv"},
-    "MNLI_unmatched": {"train": "train.tsv", "dev": "dev_mismatched.tsv", "test": "test_mismatched.tsv"},
+    "MNLI": {
+        "train": "train.tsv",
+        "dev": "dev_matched.tsv",
+        "test": "test_matched.tsv",
+    },
+    "MNLI_matched": {
+        "train": "train.tsv",
+        "dev": "dev_matched.tsv",
+        "test": "test_matched.tsv",
+    },
+    "MNLI_unmatched": {
+        "train": "train.tsv",
+        "dev": "dev_mismatched.tsv",
+        "test": "test_mismatched.tsv",
+    },
     "MRPC": {"train": "train.tsv", "dev": "dev.tsv", "test": "test.tsv"},
     "QNLI": {"train": "train.tsv", "dev": "dev.tsv", "test": "test.tsv"},
     "QQP": {"train": "train.tsv", "dev": "dev.tsv", "test": "test.tsv"},

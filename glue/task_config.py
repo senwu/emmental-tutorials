@@ -1,3 +1,16 @@
+GLUE_TASK_NAMES = [
+    "CoLA",
+    "MNLI",
+    "MRPC",
+    "QNLI",
+    "QQP",
+    "RTE",
+    "SNLI",
+    "SST-2",
+    "STS-B",
+    "WNLI",
+]
+
 SPLIT_MAPPING = {
     "CoLA": {"train": "train.tsv", "dev": "dev.tsv", "test": "test.tsv"},
     "MNLI": {

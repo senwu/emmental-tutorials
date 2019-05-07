@@ -2,8 +2,8 @@ import codecs
 import logging
 import os
 
-import torch
 import numpy as np
+import torch
 from pytorch_pretrained_bert import BertTokenizer
 
 from task_config import (
@@ -41,7 +41,7 @@ def preprocessor(
     sentences, labels = parse_tsv(data_dir, task_name, split, max_data_samples)
 
     labels = torch.from_numpy(np.array(labels))
-    
+
     do_lower_case = "uncased" in bert_model_name
 
     tokenizer = BertTokenizer.from_pretrained(

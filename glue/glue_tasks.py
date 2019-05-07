@@ -1,12 +1,14 @@
-from task_config import LABEL_MAPPING
+import torch.nn.functional as F
+from torch import nn
+from torch.nn import MSELoss
+
+from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 from modules.bert_module import BertModule
-from torch import nn
 from modules.classification_module import ClassificationModule
 from modules.regression_module import RegressionModule
-from emmental.scorer import Scorer
-import torch.nn.functional as F
-from torch.nn import MSELoss
+from task_config import LABEL_MAPPING
+
 
 def mse_loss(immediate_ouput, Y):
     mse = MSELoss()

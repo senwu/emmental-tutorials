@@ -3,6 +3,7 @@ import logging
 import os
 
 import numpy as np
+import torch
 from pytorch_pretrained_bert import BertTokenizer
 
 from task_config import (
@@ -38,6 +39,8 @@ def preprocessor(
 ):
 
     sentences, labels = parse_tsv(data_dir, task_name, split, max_data_samples)
+
+    labels = torch.from_numpy(np.array(labels))
 
     do_lower_case = "uncased" in bert_model_name
 
@@ -97,9 +100,9 @@ def preprocessor(
         token_masks += padding
         token_segments += padding
 
-        bert_token_ids.append(token_ids)
-        bert_token_masks.append(token_masks)
-        bert_token_segments.append(token_segments)
+        bert_token_ids.append(torch.LongTensor(token_ids))
+        bert_token_masks.append(torch.LongTensor(token_masks))
+        bert_token_segments.append(torch.LongTensor(token_segments))
 
     return bert_token_ids, bert_token_segments, bert_token_masks, labels
 

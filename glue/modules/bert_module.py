@@ -5,7 +5,7 @@ from torch import nn
 
 
 class BertModule(nn.Module):
-    def __init__(self, bert_model_name, dropout_prob=0, cache_dir="./cache/"):
+    def __init__(self, bert_model_name, dropout_prob=0.1, cache_dir="./cache/"):
         super().__init__()
 
         self.dropout = nn.Dropout(dropout_prob)

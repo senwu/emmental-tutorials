@@ -84,3 +84,18 @@ LABEL_MAPPING = {
     "STS-B": None,
     "WNLI": {"1": 1, "0": 2},
 }
+
+METRIC_MAPPING = {
+    "CoLA": ["matthews_correlation"],
+    "MNLI": ["accuracy"],
+    "MNLI_matched": ["accuracy"],
+    "MNLI_unmatched": ["accuracy"],
+    "MRPC": ["accuracy", "f1"],
+    "QNLI": ["accuracy"],
+    "QQP": ["accuracy", "f1"],
+    "RTE": ["accuracy"],
+    "SNLI": ["accuracy"],
+    "SST-2": ["accuracy"],
+    "STS-B": ["pearson_spearman"],
+    "WNLI": ["accuracy"],
+}

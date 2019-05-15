@@ -32,7 +32,7 @@ def get_gule_task(task_names, bert_model_name):
     tasks = dict()
 
     bert_module = BertModule(bert_model_name)
-    bert_output_dim = 768 if "uncased" in bert_model_name else 1024
+    bert_output_dim = 768 if "base" in bert_model_name else 1024
     
     for task_name in task_names:
         task_cardinality = (

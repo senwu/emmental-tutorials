@@ -4,8 +4,8 @@ import os
 
 import numpy as np
 import torch
-from pytorch_pretrained_bert import BertTokenizer
 
+from pytorch_pretrained_bert import BertTokenizer
 from task_config import (
     INDEX_MAPPING,
     LABEL_MAPPING,

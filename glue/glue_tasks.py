@@ -1,3 +1,5 @@
+from functools import partial
+
 import torch.nn.functional as F
 from torch import nn
 from torch.nn import MSELoss
@@ -8,7 +10,6 @@ from modules.bert_module import BertModule
 from modules.classification_module import ClassificationModule
 from modules.regression_module import RegressionModule
 from task_config import LABEL_MAPPING, METRIC_MAPPING
-from functools import partial
 
 
 def ce_loss(task_name, immediate_ouput_dict, Y, active):
@@ -17,15 +18,19 @@ def ce_loss(task_name, immediate_ouput_dict, Y, active):
         immediate_ouput_dict[module_name][0][active], (Y.view(-1) - 1)[active]
     )
 
+
 def mse_loss(task_name, immediate_ouput_dict, Y, active):
     mse = MSELoss()
     module_name = f"{task_name}_pred_head"
-    return mse(immediate_ouput_dict[module_name][0][active].view(-1), Y[active].view(-1))
+    return mse(
+        immediate_ouput_dict[module_name][0][active].view(-1), Y[active].view(-1)
+    )
 
 
 def output(task_name, immediate_ouput_dict):
     module_name = f"{task_name}_pred_head"
     return immediate_ouput_dict[module_name][0]
+
 
 def get_gule_task(task_names, bert_model_name):
 
@@ -33,7 +38,7 @@ def get_gule_task(task_names, bert_model_name):
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024
-    
+
     for task_name in task_names:
         task_cardinality = (
             len(LABEL_MAPPING[task_name].keys())
@@ -42,7 +47,7 @@ def get_gule_task(task_names, bert_model_name):
         )
 
         metrics = METRIC_MAPPING[task_name]
-        
+
         if task_name == "STS-B":
             loss_fn = partial(mse_loss, task_name)
         else:
@@ -74,7 +79,7 @@ def get_gule_task(task_names, bert_model_name):
             output_func=partial(output, task_name),
             scorer=Scorer(metrics=metrics),
         )
-        
+
         tasks[task_name] = task
 
     return tasks

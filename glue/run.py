@@ -27,6 +27,22 @@ def write_to_file(file_name, value):
     fout.close()
 
 
+def glue_scorer(metric_score_dict):
+    metric_names = ["CoLA/GLUE/dev/matthews_corrcoef", "MNLI/GLUE/dev/accuracy", "MRPC/GLUE/dev/accuracy_f1", "QNLI/GLUE/dev/accuracy", "QQP/GLUE/dev/accuracy_f1", "RTE/GLUE/dev/accuracy", "SST-2/GLUE/dev/accuracy", "STS-B/GLUE/dev/pearson_spearman", "WNLI/GLUE/dev/accuracy"]
+    
+    total = 0.0
+    cnt = 0
+
+    for metric_name in metric_names:
+        if metric_name not in metric_score_dict:
+            continue
+        else:
+            total += metric_score_dict[metric_name]    
+            cnt += 1
+
+    return total / cnt
+
+
 def add_application_args(parser):
 
     parser.add_argument("--task", type=str2list, required=True, help="GLUE tasks")
@@ -74,6 +90,7 @@ if __name__ == "__main__":
     logger.info(f"Config: {Meta.config}")
     write_to_file("config.txt", Meta.config)
 
+    Meta.config["learner_config"]["global_evaluation_metric_dict"] = {"model/GLUE/dev/score": glue_scorer}
     datasets = {}
 
     for task_name in args.task:
@@ -134,3 +151,5 @@ if __name__ == "__main__":
     scores = mtl_model.score(dataloaders)
     logger.info(f"Metrics: {scores}")
     write_to_file("metrics.txt", scores)
+    logger.info(f"Best metrics: {emmental_learner.logging_manager.checkpointer.best_metric_dict}")
+    write_to_file("best_metrics.txt", emmental_learner.logging_manager.checkpointer.best_metric_dict)

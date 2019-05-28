@@ -1,8 +1,7 @@
 import os
 
-from torch import nn
-
 from pytorch_pretrained_bert.modeling import BertModel
+from torch import nn
 
 
 class BertModule(nn.Module):
@@ -19,8 +18,7 @@ class BertModule(nn.Module):
             bert_model_name, cache_dir=cache_dir
         )
 
-    def forward(self, token_ids, token_segments):
+    def forward(self, token_ids, token_segments=None):
         encoded_layers, pooled_output = self.bert_model(token_ids, token_segments)
         pooled_output = self.dropout(pooled_output)
-
         return encoded_layers, pooled_output

@@ -7,7 +7,8 @@ SuperGLUE_TASK_SPLIT_MAPPING = {
     "MultiRC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
     "RTE": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
     "WiC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
-    "WSC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
+#     "WSC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
+    "WSC": {"train": "train.jsonl.retokenized.bert-large-cased", "val": "val.jsonl.retokenized.bert-large-cased", "test": "test.jsonl.retokenized.bert-large-cased"},
 }
 
 SuperGLUE_LABEL_MAPPING = {
@@ -15,6 +16,7 @@ SuperGLUE_LABEL_MAPPING = {
     "RTE": {"entailment": 1, "not_entailment": 2},
     "WiC": {True: 1, False: 2},
     "COPA": {0: 1, 1: 2},
+    "WSC": {True: 1, False: 2},
 }
 
 SuperGLUE_TASK_METRIC_MAPPING = {

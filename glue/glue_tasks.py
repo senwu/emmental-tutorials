@@ -7,8 +7,6 @@ from torch.nn import MSELoss
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 from modules.bert_module import BertModule
-from modules.classification_module import ClassificationModule
-from modules.regression_module import RegressionModule
 from task_config import LABEL_MAPPING, METRIC_MAPPING
 
 
@@ -67,7 +65,11 @@ def get_gule_task(task_names, bert_model_name):
                 {
                     "name": "input",
                     "module": "bert_module",
-                    "inputs": [("_input_", "token_ids"), ("_input_", "token_segments")],
+                    "inputs": [
+                        ("_input_", "token_ids"),
+                        ("_input_", "token_segments"),
+                        ("_input_", "token_masks"),
+                    ],
                 },
                 {
                     "name": f"{task_name}_pred_head",

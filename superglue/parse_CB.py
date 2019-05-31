@@ -6,8 +6,8 @@ import numpy as np
 import torch
 
 from emmental.data import EmmentalDataLoader, EmmentalDataset
-from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_SPLIT_MAPPING
-from tokenizer import get_tokenizer
+from superglue.task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_SPLIT_MAPPING
+from superglue.tokenizer import get_tokenizer
 
 logger = logging.getLogger(__name__)
 

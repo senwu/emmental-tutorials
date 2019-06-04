@@ -9,6 +9,7 @@ import emmental
 from emmental.model import EmmentalModel
 from models.wic import build_model as build_model_wic
 from models.cb import build_model as build_model_cb
+from task_config import SuperGLUE_LABEL_INVERSE
 
 build_model = {
     "CB": build_model_cb,
@@ -19,32 +20,6 @@ build_model = {
     # "WSC": build_model_wsc,
 }
 
-def preds_to_ent_contr(preds):
-    """Converts predictions (1s and 2s) into strings (entailment/contradiction)"""
-    return ["entailment" if x == 1 else "contradiction" for x in preds]
-
-def preds_to_01(preds):
-    """Converts predictions (1s and 2s) into binary labels (0/1)"""
-    return [1 if x == 1 else 0 for x in preds]
-
-def preds_to_ent_notent(preds):
-    """Converts predictions (1s and 2s) into strings (entailment/not_entailment)"""
-    return ["entailment" if x == 1 else "not_entailment" for x in preds]
-
-def preds_to_true_false(preds):
-    """Converts predictions (1s and 2s) into strings (true/false)"""
-    return ["true" if x == 1 else "false" for x in preds]
-
-
-
-preds_to_output = {
-    "CB": preds_to_ent_contr,
-    "COPA": preds_to_01,
-    "MultiRC": None, # TBD
-    "RTE": preds_to_ent_notent,
-    "WiC": preds_to_true_false,
-    "WSC": preds_to_true_false,
-}
 
 CB_MODEL = "/path/to/model"
 COPA_MODEL = "/path/to/model"
@@ -72,7 +47,7 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
         os.makedirs(os.path.dirname(submit_dir))
     
     for task_name, path in zip(TASKS, [cb, copa, multirc, rte, wic, wsc]):
-        if task_name not in ["CB", "WiC"]:
+        if task_name not in ["WiC"]:
             continue
         task = build_model[task_name](BERT_MODEL_NAME)
         model = EmmentalModel(name=f"SuperGLUE_{task_name}", tasks=[task])
@@ -101,8 +76,12 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
         logging.info(preds)
 
         preds_formatted = []
-        for idx, y in enumerate(preds_to_output[task_name](preds)):
-            preds_formatted.append({"idx": idx, "label": y})
+        for idx, y in enumerate(preds):
+            label = str(SuperGLUE_LABEL_INVERSE[task_name][y]).lower()
+            if task_name == "MultiRC":
+                raise NotImplementedError
+            else:
+                preds_formatted.append({"idx": idx, "label": label})
 
         filename = f'{task_name}.jsonl'
         filepath = os.path.join(submit_dir, filename)

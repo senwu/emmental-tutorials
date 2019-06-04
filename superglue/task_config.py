@@ -23,6 +23,10 @@ SuperGLUE_LABEL_MAPPING = {
     "MultiRC": {True: 1, False: 2},
 }
 
+SuperGLUE_LABEL_INVERSE = {}
+for task, mapping in SuperGLUE_LABEL_MAPPING.items():
+    SuperGLUE_LABEL_INVERSE[task] = {v: k for k, v in mapping.items()}
+
 SuperGLUE_TASK_METRIC_MAPPING = {
     "CB": ["accuracy"],
     "COPA": ["accuracy"],

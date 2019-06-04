@@ -1,5 +1,6 @@
 import os
 
+import torch
 from pytorch_pretrained_bert.modeling import BertModel
 from torch import nn
 
@@ -29,3 +30,18 @@ class BertLastCLSModule(nn.Module):
 
     def forward(self, input):
         return input[-1][:, 0, :]
+
+
+class BertContactLastCLSWithTwoTokensModule(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, input, idx1, idx2):
+        last_layer = input[-1]
+        last_cls = last_layer[:, 0, :]
+        idx1 = idx1.unsqueeze(-1).unsqueeze(-1).expand([-1, -1, last_layer.size(-1)])
+        idx2 = idx2.unsqueeze(-1).unsqueeze(-1).expand([-1, -1, last_layer.size(-1)])
+        token1_emb = last_layer.gather(dim=1, index=idx1).squeeze(dim=1)
+        token2_emb = last_layer.gather(dim=1, index=idx2).squeeze(dim=1)
+        output = torch.cat([last_cls, token1_emb, token2_emb], dim=-1)
+        return output

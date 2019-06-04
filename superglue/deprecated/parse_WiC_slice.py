@@ -20,13 +20,14 @@ def get_WiC_dataloaders(
     max_sequence_length=128,
     tokenizer_name="bert-base-uncased",
     batch_size=16,
+    slice_func_dict = {},
 ):
-    """Load RTE DATA AND return dataloaders"""
+    """Load WiC data and return dataloaders"""
 
     def parse_jsonl(jsonl_path):
-        print(jsonl_path)
+#         print(jsonl_path)
         rows = [json.loads(row) for row in open(jsonl_path, encoding="utf-8")]
-        print(rows[0])
+#         print(rows[0])
         # Truncate to max_data_samples
         if max_data_samples:
             rows = rows[:max_data_samples]
@@ -36,7 +37,11 @@ def get_WiC_dataloaders(
         sent2s = []
         sent1_idxs = []
         sent2_idxs = []
+        sent1_ori_idxs = []
+        sent2_ori_idxs = []
         labels = []
+        words = []
+        poses = []
 
         bert_token_ids = []
         bert_token_masks = []
@@ -49,12 +54,20 @@ def get_WiC_dataloaders(
 #             if index not in [3671, 2819, 3257, 2725]: continue
             sent1 = sample["sentence1"]
             sent2 = sample["sentence2"]
+            word =  sample["word"]
+            pos =  sample["pos"]
             sent1_idx = int(sample["sentence1_idx"])
             sent2_idx = int(sample["sentence2_idx"])
+            sent1_ori_idx = int(sample["sentence1_idx"])
+            sent2_ori_idx = int(sample["sentence1_idx"])
             label = sample["label"] if "label" in sample else True
             uids.append(index)
             sent1s.append(sent1)
             sent2s.append(sent2)
+            sent1_ori_idxs.append(sent1_ori_idx)
+            sent2_ori_idxs.append(sent2_ori_idx)
+            words.append(word)
+            poses.append(pos)
             labels.append(SuperGLUE_LABEL_MAPPING[task_name][label])
 
             # Tokenize sentences
@@ -104,11 +117,11 @@ def get_WiC_dataloaders(
             token_masks = [1] * len(token_ids)
 
             # Append padding
-            padding = [0] * (max_sequence_length - len(token_ids))
+            # padding = [0] * (max_sequence_length - len(token_ids))
 
-            token_ids += padding
-            token_masks += padding
-            token_segments += padding
+            # token_ids += padding
+            # token_masks += padding
+            # token_segments += padding
 
             bert_token_ids.append(torch.LongTensor(token_ids))
             bert_token_masks.append(torch.LongTensor(token_masks))
@@ -125,8 +138,12 @@ def get_WiC_dataloaders(
                 "uids": uids,
                 "sent1": sent1s,
                 "sent2": sent2s,
+                "words": words,
+                "poses": poses,
                 "sent1_idxs": sent1_idxs,
                 "sent2_idxs": sent2_idxs,
+                "sent1_ori_idxs": sent1_ori_idxs,
+                "sent2_ori_idxs": sent2_ori_idxs,
                 "token_ids": bert_token_ids,
                 "token_masks": bert_token_masks,
                 "token_segments": bert_token_segments,
@@ -143,9 +160,19 @@ def get_WiC_dataloaders(
             data_dir, task_name, SuperGLUE_TASK_SPLIT_MAPPING[task_name][split]
         )
         dataset = parse_jsonl(jsonl_path)
+        
+#         task_to_label_dict = {task_name: "labels"}
+        task_to_label_dict = {}        
+    
+        for slice_name, slice_func in slice_func_dict.items():
+            ind, pred = slice_func(dataset)
+            dataset.Y_dict.update({f"{task_name}_slice_ind_{slice_name}": ind, f"{task_name}_slice_pred_{slice_name}": pred})
+            task_to_label_dict.update({f"{task_name}_slice_ind_{slice_name}": f"{task_name}_slice_ind_{slice_name}", f"{task_name}_slice_pred_{slice_name}": f"{task_name}_slice_pred_{slice_name}"})
+        
+        task_to_label_dict.update({task_name: "labels"})
 
         dataloaders[split] = EmmentalDataLoader(
-            task_to_label_dict={task_name: "labels"},
+            task_to_label_dict=task_to_label_dict,
             dataset=dataset,
             split=split,
             batch_size=batch_size,

@@ -78,3 +78,6 @@ venv.bak/
 
 # project-specific
 logs/
+cache/
+models/
+submissions/

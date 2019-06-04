@@ -1,4 +1,5 @@
 import logging
+
 from pytorch_pretrained_bert import BertTokenizer
 
 logger = logging.getLogger(__name__)

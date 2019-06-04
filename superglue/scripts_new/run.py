@@ -49,7 +49,7 @@ def add_application_args(parser):
     parser.add_argument(
         "--bert_model",
         type=str,
-        default="bert-base-uncased",
+        default="bert-large-cased",
         help="Which bert pretrained model to use",
     )
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     Meta.config["learner_config"]["global_evaluation_metric_dict"] = {
         f"model/SuperGLUE/{split}/score": partial(superglue_scorer, split=split)
-        for split in ["train", "val", "test"]
+        for split in ["val"]
     }
 
     # Construct dataloaders and tasks

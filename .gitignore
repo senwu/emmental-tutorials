@@ -80,3 +80,4 @@ venv.bak/
 logs/
 cache/
 submissions/
+saved_models/

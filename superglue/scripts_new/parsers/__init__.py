@@ -1,5 +1,4 @@
-# import multirc_parser
-from . import cb, copa, multirc, rte, wic
+from . import cb, copa, multirc, rte, wic, wsc, swag
 
 parser = {
     "MultiRC": multirc.parse,
@@ -7,4 +6,6 @@ parser = {
     "CB": cb.parse,
     "COPA": copa.parse,
     "RTE": rte.parse,
+    "WSC": wsc.parse,
+    "SWAG": swag.parse,
 }

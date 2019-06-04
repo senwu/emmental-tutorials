@@ -12,6 +12,8 @@ SuperGLUE_TASK_SPLIT_MAPPING = {
         "val": "val.jsonl.retokenized.bert-large-cased",
         "test": "test.jsonl.retokenized.bert-large-cased",
     },
+    #### External Task ####
+    "SWAG": {"train": "train.csv", "val": "val.csv", "test": "test.csv"},
 }
 
 SuperGLUE_LABEL_MAPPING = {
@@ -21,6 +23,7 @@ SuperGLUE_LABEL_MAPPING = {
     "WiC": {True: 1, False: 2},
     "WSC": {True: 1, False: 2},
     "MultiRC": {True: 1, False: 2},
+    "SWAG": {0: 1, 1: 2, 2: 3, 3: 4},
 }
 
 SuperGLUE_TASK_METRIC_MAPPING = {
@@ -30,4 +33,5 @@ SuperGLUE_TASK_METRIC_MAPPING = {
     "RTE": ["accuracy"],
     "WiC": ["accuracy"],
     "WSC": ["accuracy"],
+    "SWAG": ["accuracy"],
 }

@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 import os
 
@@ -36,20 +37,26 @@ TASKS = ["CB", "COPA", "MultiRC", "RTE", "WiC", "WSC"]
 BERT_MODEL_NAME = "bert-large-cased"
 
 
-def format_multirc_preds(preds, dataloader, data_dir):
-    preds_formatted = []
-    task_name = "MultiRC"
-    split = "test"
+def format_multirc_preds(preds, dataloader):
     # Make prediction map
-    
-    # Write answers into data
-    jsonl_path = os.path.join(
-        data_dir, task_name, SuperGLUE_TASK_SPLIT_MAPPING[task_name][split]
-    )
-    with jsonlines.open(jsonl_path) as reader:
-        for line in reader:
-            print(line)
-            import pdb; pdb.set_trace()
+    paragraphs = paragraphs = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    for idx, pred in enumerate(preds):
+        pid = dataloader.dataset.X_dict["pids"][idx]
+        qid = dataloader.dataset.X_dict["qids"][idx]
+        aid = dataloader.dataset.X_dict["aids"][idx]
+        paragraphs[pid][qid][aid] = pred
+    # Moves indices from keys to sibling fields
+    preds_formatted = []
+    for pid, questions in paragraphs.items():
+        p_dict = {"idx": pid, "paragraph": {"questions": []}}
+        for qid, question in questions.items():
+            q_dict = {"idx": qid, "answers": []}
+            for aid, y in question.items():
+                label = str(SuperGLUE_LABEL_INVERSE["MultiRC"][y]).lower()
+                answer = {"idx": aid, "label": str(label)}
+                q_dict["answers"].append(answer)
+            p_dict["paragraph"]["questions"].append(q_dict)
+        preds_formatted.append(p_dict)
     return preds_formatted
 
 
@@ -70,14 +77,14 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
     
     for task_name, path in zip(TASKS, [cb, copa, multirc, rte, wic, wsc]):
         # TEMP
-        # if task_name == "MultiRC":
+        # if task_name != "MultiRC":
         #     continue
-        # # TEMP
+        # TEMP
         task = build_model[task_name](BERT_MODEL_NAME)
         model = EmmentalModel(name=f"SuperGLUE_{task_name}", tasks=[task])
         try:
             model.load(path)
-        except UnboundLocalError as e:
+        except UnboundLocalError:
             msg = ("Failed to load state dict; confirm that your model was saved with "
                    "a command such as 'torch.save(model.state_dict(), PATH)'")
             logging.error(msg)
@@ -93,12 +100,12 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
             uid="uids",
         )
         # TEMP: Sanity check val performance
-        # logging.info(model.score(dataloaders[0]))
+        logging.info(model.score(dataloaders[0]))
         # TEMP
         
         preds = model.predict(dataloaders[-1], return_preds=True)["preds"][task_name]
         if task_name == "MultiRC":
-            preds_formatted = format_multirc_preds(preds, dataloaders[-1], data_dir)
+            preds_formatted = format_multirc_preds(preds, dataloaders[-1])
         else:
             preds_formatted = []
             for idx, y in enumerate(preds):

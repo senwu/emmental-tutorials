@@ -5,6 +5,7 @@ from functools import partial
 
 import emmental
 import models
+import slicing
 from dataloaders import get_dataloaders
 from emmental import Meta
 from emmental.learner import EmmentalLearner
@@ -54,6 +55,7 @@ def add_application_args(parser):
     )
 
     parser.add_argument("--batch_size", type=int, default=16, help="batch size")
+    parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
 
     parser.add_argument(
         "--max_data_samples", type=int, default=None, help="Maximum data samples to use"
@@ -64,7 +66,7 @@ def add_application_args(parser):
     )
 
     parser.add_argument(
-        "--train", type=str2bool, default=True, help="Whether train the model or not"
+        "--train", type=str2bool, default=True, help="Whether to train the model"
     )
 
 
@@ -102,22 +104,28 @@ if __name__ == "__main__":
     superglue_tasks = []
 
     for task_name in args.task:
-        superglue_dataloaders.extend(
-            get_dataloaders(
-                data_dir=args.data_dir,
-                task_name=task_name,
-                splits=["train", "val", "test"],
-                max_sequence_length=args.max_sequence_length,
-                max_data_samples=args.max_data_samples,
-                tokenizer_name=args.bert_model,
-                batch_size=args.batch_size,
-            )
+        dataloaders = get_dataloaders(
+            data_dir=args.data_dir,
+            task_name=task_name,
+            splits=["train", "val", "test"],
+            max_sequence_length=args.max_sequence_length,
+            max_data_samples=args.max_data_samples,
+            tokenizer_name=args.bert_model,
+            batch_size=args.batch_size,
         )
+        task = models.model[task_name](args.bert_model)
+        if args.slices:
+            slice_func_dict = slicing.slice_func_dict[task_name]
+            dataloaders = slicing.add_slice_labels(task_name, dataloaders, slice_func_dict)
+            tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict)
+        else:
+            tasks = [task]
 
-        superglue_tasks.append(models.model[task_name](args.bert_model))
+        superglue_dataloaders.extend(dataloaders)
+        superglue_tasks.extend(tasks)
 
     # Build Emmental model
-    superglue_model = EmmentalModel(name="SuperGLUE_task", tasks=superglue_tasks)
+    superglue_model = EmmentalModel(name=f"SuperGLUE", tasks=superglue_tasks)
 
     # Load pretrained model if necessary
     if Meta.config["model_config"]["model_path"]:

@@ -1,2 +1,3 @@
-pytorch_pretrained_bert
 jsonlines
+jupyter
+pytorch_pretrained_bert

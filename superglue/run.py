@@ -3,6 +3,10 @@ import logging
 import sys
 from functools import partial
 
+sys.path.append('/dfs/scratch0/paroma/emmental/')
+sys.path.append('/dfs/scratch0/paroma/emmental/src/')
+sys.path.append('../')
+sys.path.append('/dfs/scratch0/paroma/emmental/src/emmental/')
 import emmental
 import models
 from dataloaders import get_dataloaders

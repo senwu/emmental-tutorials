@@ -2,24 +2,33 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class SliceMasterModule(nn.Module):
-    def __init__(self, feature_dim, class_cardinality):
+    def __init__(
+        self,
+        slice_ind_key="_slice_ind_",
+        slice_pred_key="_slice_pred_",
+        slice_pred_feat_key="_slice_feat_",
+    ):
         super().__init__()
-        self.linear = nn.Linear(feature_dim, class_cardinality)
+
+        self.slice_ind_key = slice_ind_key
+        self.slice_pred_key = slice_pred_key
+        self.slice_pred_feat_key = slice_pred_feat_key
 
     def forward(self, immediate_ouput_dict):
         slice_ind_names = sorted(
             [
                 flow_name
                 for flow_name in immediate_ouput_dict.keys()
-                if "_slice_ind_" in flow_name
+                if self.slice_ind_key in flow_name
             ]
         )
         slice_pred_names = sorted(
             [
                 flow_name
                 for flow_name in immediate_ouput_dict.keys()
-                if "_slice_pred_" in flow_name
+                if self.slice_pred_key in flow_name
             ]
         )
 
@@ -42,7 +51,7 @@ class SliceMasterModule(nn.Module):
             [
                 flow_name
                 for flow_name in immediate_ouput_dict.keys()
-                if "_slice_feat_" in flow_name
+                if self.slice_pred_feat_key in flow_name
             ]
         )
 
@@ -58,4 +67,4 @@ class SliceMasterModule(nn.Module):
 
         reweighted_rep = torch.sum(A * slice_reps, 1)
 
-        return self.linear.forward(reweighted_rep)
+        return reweighted_rep

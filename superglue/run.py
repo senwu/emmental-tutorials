@@ -58,6 +58,10 @@ def add_application_args(parser):
     parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
 
     parser.add_argument(
+        "--slice_hidden_dim", type=int, default=1024, help="Slice hidden dimension size"
+    )
+
+    parser.add_argument(
         "--max_data_samples", type=int, default=None, help="Maximum data samples to use"
     )
 
@@ -117,7 +121,7 @@ if __name__ == "__main__":
         if args.slices:
             slice_func_dict = slicing.slice_func_dict[task_name]
             dataloaders = slicing.add_slice_labels(task_name, dataloaders, slice_func_dict)
-            tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict)
+            tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
         else:
             tasks = [task]
 

@@ -143,6 +143,8 @@ if __name__ == "__main__":
     scores = superglue_model.score(superglue_dataloaders)
 
     # Slice scoring
+    # TODO: We currently perform inference 2x: once above and once for slice evaluation
+    # This can be improved if it's a bottleneck.
     for task_name in args.task:
         scorer = superglue_model.scorers[task_name]
         slice_func_dict = slicing.slice_func_dict[task_name]
@@ -158,7 +160,6 @@ if __name__ == "__main__":
                     continue
                 inds, _ = slice_func(dataloader.dataset)
                 mask = (inds == 1).numpy().astype(bool)
-                print(f"Scoring on {len(golds[mask])} examples")
                 slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])
                 for metric_name, metric_value in slice_scores.items():
                     identifier = "/".join(

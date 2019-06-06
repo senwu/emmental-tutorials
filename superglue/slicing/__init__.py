@@ -9,6 +9,15 @@ from . import (
     # WSC_slices,
 )
 
+slice_func_dict = {
+    # "CB": CB_slices.slice_func_dict,
+    # "COPA": COPA_slices.slice_func_dict,
+    # "MultiRC": MultiRC_slices.slice_func_dict,
+    # "RTE": RTE_slices.slice_func_dict,
+    "WiC": WiC_slices.slice_func_dict,
+    # "WSC": WSC_slices.slice_func_dict,
+}
+
 logger = logging.getLogger(__name__)
 
 def add_slice_labels(task_name, dataloaders, slice_func_dict):
@@ -27,13 +36,3 @@ def add_slice_labels(task_name, dataloaders, slice_func_dict):
 def add_slice_tasks(task_name, base_task, slice_func_dict):
     # TODO(senwu)
     raise NotImplementedError
-
-
-slice_func_dict = {
-    # "CB": CB_slices.slice_func_dict,
-    # "COPA": COPA_slices.slice_func_dict,
-    # "MultiRC": MultiRC_slices.slice_func_dict,
-    # "RTE": RTE_slices.slice_func_dict,
-    "WiC": WiC_slices.slice_func_dict,
-    # "WSC": WSC_slices.slice_func_dict,
-}

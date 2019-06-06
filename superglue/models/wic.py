@@ -1,12 +1,13 @@
 import sys
 from functools import partial
 
-from modules.bert_module import BertContactLastCLSWithTwoTokensModule, BertModule
-from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
 
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
+from modules.bert_module import (BertContactLastCLSWithTwoTokensModule,
+                                 BertModule)
+from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 
 from . import utils
 
@@ -60,7 +61,7 @@ def build_model(bert_model_name):
                 ],
             },
             {
-                "name": f"{TASK_NAME}_bert_last_CLS_with_two_tokens",
+                "name": f"{TASK_NAME}_feature",
                 "module": f"{TASK_NAME}_feature",
                 "inputs": [
                     (f"{TASK_NAME}_bert_module", 0),
@@ -71,7 +72,7 @@ def build_model(bert_model_name):
             {
                 "name": f"{TASK_NAME}_pred_head",
                 "module": f"{TASK_NAME}_pred_head",
-                "inputs": [(f"{TASK_NAME}_bert_last_CLS_with_two_tokens", 0)],
+                "inputs": [(f"{TASK_NAME}_feature", 0)],
             },
         ],
         loss_func=loss_fn,

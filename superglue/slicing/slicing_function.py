@@ -40,7 +40,7 @@ class slicing_function():
                 preds.append(pred)
             inds = torch.from_numpy(np.array(inds)).view(-1)
             preds = torch.from_numpy(np.array(preds)).view(-1)
-            logger.info(f"Total {int((inds != 0).sum())} / {len(dataset)} examples are "
+            logger.info(f"Total {int((inds == 1).sum())} / {len(dataset)} examples are "
                         f"in slice {f.__name__}")
             return inds, preds
         return wrapped_f

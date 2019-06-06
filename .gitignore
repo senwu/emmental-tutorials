@@ -1,8 +1,5 @@
 ### Python ###
-ernie/data/*
-ernie/ernie_base/*
-ernie/kg_embed/*
-*.zip
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

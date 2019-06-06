@@ -6,7 +6,7 @@ import torch
 logger = logging.getLogger(__name__)
 
 # WARNING: Hardcoded here instead of Meta.config["learner_config"]["ignore_index"]
-PADDING = -100
+PADDING = 0
 
 def slice_base(dataset):
     return torch.from_numpy(np.array([1] * len(dataset))), dataset.Y_dict["labels"]

@@ -7,6 +7,9 @@ import torch
 
 logger = logging.getLogger(__name__)
 
+# NOTE: This must match Meta.config["learner_config"]["ignore_index"]
+IGNORE_INDEX = 0
+
 
 class slicing_function():
     """
@@ -26,11 +29,13 @@ class slicing_function():
             for idx in range(len(dataset)):
                 example = SimpleNamespace(**{field: dataset.X_dict[field][idx] 
                                              for field in self.fields})
-                ind = f(example)
-                if ind == 0:
-                    pred = 0
-                else:
+                in_slice = f(example)
+                if in_slice:
+                    ind = 1
                     pred = dataset.Y_dict["labels"][idx]
+                else:
+                    ind = 2
+                    pred = IGNORE_INDEX
                 inds.append(ind)
                 preds.append(pred)
             inds = torch.from_numpy(np.array(inds)).view(-1)

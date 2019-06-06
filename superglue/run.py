@@ -145,30 +145,31 @@ if __name__ == "__main__":
     # Slice scoring
     # TODO: We currently perform inference 2x: once above and once for slice evaluation
     # This can be improved if it's a bottleneck.
-    for task_name in args.task:
-        scorer = superglue_model.scorers[task_name]
-        slice_func_dict = slicing.slice_func_dict[task_name]
-        for dataloader in superglue_dataloaders:
-            if dataloader.split == "test":
-                continue
-            pred_dict = superglue_model.predict(dataloader, return_preds=True)
-            golds = pred_dict["golds"][task_name]
-            probs = pred_dict["probs"][task_name]
-            preds = pred_dict["preds"][task_name]
-            for slice_name, slice_func in slice_func_dict.items():
-                if "slice_base" in slice_name:
+    if not args.slices:  # if args.slices, then regular score() will report quality
+        for task_name in args.task:
+            scorer = superglue_model.scorers[task_name]
+            slice_func_dict = slicing.slice_func_dict[task_name]
+            for dataloader in superglue_dataloaders:
+                if dataloader.split == "test":
                     continue
-                inds, _ = slice_func(dataloader.dataset)
-                mask = (inds == 1).numpy().astype(bool)
-                slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])
-                for metric_name, metric_value in slice_scores.items():
-                    identifier = "/".join(
-                        [f"{task_name}:{slice_name}", 
-                         dataloader.data_name,
-                         dataloader.split, 
-                         metric_name]
-                    )
-                    scores[identifier] = metric_value
+                pred_dict = superglue_model.predict(dataloader, return_preds=True)
+                golds = pred_dict["golds"][task_name]
+                probs = pred_dict["probs"][task_name]
+                preds = pred_dict["preds"][task_name]
+                for slice_name, slice_func in slice_func_dict.items():
+                    if "slice_base" in slice_name:
+                        continue
+                    inds, _ = slice_func(dataloader.dataset)
+                    mask = (inds == 1).numpy().astype(bool)
+                    slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])
+                    for metric_name, metric_value in slice_scores.items():
+                        identifier = "/".join(
+                            [f"{task_name}:{slice_name}", 
+                            dataloader.data_name,
+                            dataloader.split, 
+                            metric_name]
+                        )
+                        scores[identifier] = metric_value
 
     # Save metrics into file
     logger.info(f"Metrics: {scores}")

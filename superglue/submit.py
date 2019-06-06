@@ -1,6 +1,7 @@
 from collections import defaultdict
 import logging
 import os
+import re
 
 import click
 import jsonlines
@@ -25,16 +26,7 @@ build_model = {
     "WSC": build_model_wsc,
 }
 
-
-CB_MODEL = "/path/to/model"
-COPA_MODEL = "/path/to/model"
-MultiRC_MODEL = "/path/to/model"
-RTE_MODEL = "/path/to/model"
-WiC_MODEL = "/path/to/model"
-WSC_MODEL = "/path/to/model"
-
 TASKS = ["CB", "COPA", "MultiRC", "RTE", "WiC", "WSC"]
-BERT_MODEL_NAME = "bert-large-cased"
 
 
 def format_multirc_preds(preds, dataloader):
@@ -60,13 +52,32 @@ def format_multirc_preds(preds, dataloader):
     return preds_formatted
 
 
+def extract_from_cmd(path):
+    log_dir = os.path.dirname(path)
+    with open(os.path.join(log_dir, "cmd.txt")) as f:
+        cmd = f.read()
+
+    bert_model_match = re.search('--bert_model[ =](bert-\S+)', cmd)
+    if bert_model_match:
+        bert_model_name = bert_model_match.group(1)
+    else:
+        bert_model_name = 'bert-large-cased'
+
+    max_seq_match = re.search('--max_sequence_length[ =](\d+)', cmd)
+    if max_seq_match:
+        max_seq_len = max_seq_match.group(1)
+    else:
+        max_seq_len = 256
+    return bert_model_name, max_seq_len
+
+
 @click.command()
-@click.option('--CB', default=CB_MODEL, help="Path to CB model")
-@click.option('--COPA', default=COPA_MODEL, help="Path to COPA model")
-@click.option('--MultiRC', default=MultiRC_MODEL, help="Path to MultiRC model")
-@click.option('--RTE', default=RTE_MODEL, help="Path to RTE model")
-@click.option('--WiC', default=WiC_MODEL, help="Path to WiC model")
-@click.option('--WSC', default=WSC_MODEL, help="Path to WSC model")
+@click.option('--CB', help="Path to CB model")
+@click.option('--COPA', help="Path to COPA model")
+@click.option('--MultiRC', help="Path to MultiRC model")
+@click.option('--RTE', help="Path to RTE model")
+@click.option('--WiC', help="Path to WiC model")
+@click.option('--WSC', help="Path to WSC model")
 @click.option('--split', default="test", type=click.Choice(["train", "val", "test"]))
 @click.option('--data-dir', default=os.environ["SUPERGLUEDATA"])
 @click.argument('name')
@@ -77,10 +88,17 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
     
     for task_name, path in zip(TASKS, [cb, copa, multirc, rte, wic, wsc]):
         # TEMP
-        # if task_name != "MultiRC":
-        #     continue
+        if task_name != "WSC":
+            continue
         # TEMP
-        task = build_model[task_name](BERT_MODEL_NAME)
+
+        bert_model_name, max_seq_len = extract_from_cmd(path)
+        msg = (f"Using {bert_model_name} and max_sequence_len={max_seq_len} for task "
+               f"{task_name}")
+        logging.info(msg)
+
+        # Build model
+        task = build_model[task_name](bert_model_name)
         model = EmmentalModel(name=f"SuperGLUE_{task_name}", tasks=[task])
         try:
             model.load(path)
@@ -89,18 +107,20 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
                    "a command such as 'torch.save(model.state_dict(), PATH)'")
             logging.error(msg)
             raise
+
+        # Build dataloaders
         dataloaders = get_dataloaders(
             data_dir,
             task_name=task_name,
             splits=["val", "test"], # TODO: replace with ['split'] and update below
             max_data_samples=None,
-            # max_sequence_length=128,
-            tokenizer_name=BERT_MODEL_NAME,
+            max_sequence_length=max_seq_len,
+            tokenizer_name=bert_model_name,
             batch_size=16,
             uid="uids",
         )
         # TEMP: Sanity check val performance
-        logging.info(model.score(dataloaders[0]))
+        # logging.info(model.score(dataloaders[0]))
         # TEMP
         
         preds = model.predict(dataloaders[-1], return_preds=True)["preds"][task_name]

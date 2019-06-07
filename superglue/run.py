@@ -110,8 +110,8 @@ if __name__ == "__main__":
     }
 
     # Construct dataloaders and tasks and load slices
-    superglue_dataloaders = []
-    superglue_tasks = []
+    dataloaders = []
+    tasks = []
 
     for task_name in args.task:
         dataloaders = get_dataloaders(
@@ -131,11 +131,11 @@ if __name__ == "__main__":
         else:
             tasks = [task]
 
-        superglue_dataloaders.extend(dataloaders)
-        superglue_tasks.extend(tasks)
+        dataloaders.extend(dataloaders)
+        tasks.extend(tasks)
 
     # Build Emmental model
-    model = EmmentalModel(name=f"SuperGLUE", tasks=superglue_tasks)
+    model = EmmentalModel(name=f"SuperGLUE", tasks=tasks)
 
     # Load pretrained model if necessary
     if Meta.config["model_config"]["model_path"]:
@@ -144,38 +144,15 @@ if __name__ == "__main__":
     # Training
     if args.train:
         emmental_learner = EmmentalLearner()
-        emmental_learner.learn(model, superglue_dataloaders)
+        emmental_learner.learn(model, dataloaders)
 
-    scores = model.score(superglue_dataloaders)
-
-    # Slice scoring
-    # TODO: We currently perform inference 2x: once above and once for slice evaluation
-    # This can be improved if it's a bottleneck.
-    if args.slices:  # if args.slices, then regular score() will report quality
+    if args.slices:
+        slice_func_dict = {}
         for task_name in args.task:
-            scorer = model.scorers[task_name]
-            slice_func_dict = slicing.slice_func_dict[task_name]
-            for dataloader in superglue_dataloaders:
-                if dataloader.split == "test":
-                    continue
-                pred_dict = model.predict(dataloader, return_preds=True)
-                golds = pred_dict["golds"][task_name]
-                probs = pred_dict["probs"][task_name]
-                preds = pred_dict["preds"][task_name]
-                for slice_name, slice_func in slice_func_dict.items():
-                    if "slice_base" in slice_name:
-                        continue
-                    inds, _ = slice_func(dataloader.dataset)
-                    mask = (inds == 1).numpy().astype(bool)
-                    slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])
-                    for metric_name, metric_value in slice_scores.items():
-                        identifier = "/".join(
-                            [f"{task_name}:{slice_name}", 
-                            dataloader.data_name,
-                            dataloader.split, 
-                            metric_name]
-                        )
-                        scores[identifier] = metric_value
+            slice_func_dict.update(slicing.slice_func_dict[task_name])
+        scores = slicing.score_slices(model, dataloaders, args.tasks, slice_func_dict)
+    else:
+        scores = model.score(dataloaders)
 
     # Save metrics into file
     logger.info(f"Metrics: {scores}")

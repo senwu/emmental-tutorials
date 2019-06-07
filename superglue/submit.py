@@ -51,7 +51,6 @@ def format_multirc_preds(preds, dataloader):
         preds_formatted.append(p_dict)
     return preds_formatted
 
-
 def extract_from_cmd(path):
     log_dir = os.path.dirname(path)
     with open(os.path.join(log_dir, "cmd.txt")) as f:
@@ -70,6 +69,19 @@ def extract_from_cmd(path):
         max_seq_len = 256
     return bert_model_name, max_seq_len
 
+def make_submission_file(model, dataloader, task_name, filepath):
+    preds = model.predict(dataloader, return_preds=True)["preds"][task_name]
+    if task_name == "MultiRC":
+        preds_formatted = format_multirc_preds(preds, dataloader)
+    else:
+        preds_formatted = []
+        for idx, y in enumerate(preds):
+            label = str(SuperGLUE_LABEL_INVERSE[task_name][y]).lower()
+            preds_formatted.append({"idx": idx, "label": label})
+
+    logging.info(f"Writing predictions to {filepath}")
+    with jsonlines.open(filepath, mode='w') as writer:
+        writer.write_all(preds_formatted)
 
 @click.command()
 @click.option('--CB', help="Path to CB model")
@@ -112,7 +124,7 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
         dataloaders = get_dataloaders(
             data_dir,
             task_name=task_name,
-            splits=["val", "test"], # TODO: replace with ['split'] and update below
+            splits=["test"], # TODO: replace with ['split'] and update below
             max_data_samples=None,
             max_sequence_length=max_seq_len,
             tokenizer_name=bert_model_name,
@@ -122,21 +134,10 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
         # TEMP: Sanity check val performance
         # logging.info(model.score(dataloaders[0]))
         # TEMP
-        
-        preds = model.predict(dataloaders[-1], return_preds=True)["preds"][task_name]
-        if task_name == "MultiRC":
-            preds_formatted = format_multirc_preds(preds, dataloaders[-1])
-        else:
-            preds_formatted = []
-            for idx, y in enumerate(preds):
-                label = str(SuperGLUE_LABEL_INVERSE[task_name][y]).lower()
-                preds_formatted.append({"idx": idx, "label": label})
 
         filename = f'{task_name}.jsonl'
         filepath = os.path.join(submit_dir, filename)
-        logging.info(f"Writing predictions to {filepath}")
-        with jsonlines.open(filepath, mode='w') as writer:
-            writer.write_all(preds_formatted)
+        make_submission_file(model, dataloaders[-1], task_name, filepath)
 
     os.chdir(submit_dir)
     os.system("zip -r submission.zip *.jsonl")

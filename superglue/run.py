@@ -80,7 +80,7 @@ def add_application_args(parser):
     )
 
 
-if __name__ == "__main__":
+def get_parser():
     # Parse cmdline args and setup environment
     parser = argparse.ArgumentParser(
         "SuperGLUE Runner", formatter_class=argparse.ArgumentDefaultsHelpFormatter
@@ -88,8 +88,10 @@ if __name__ == "__main__":
 
     parser = parse_arg(parser=parser)
     add_application_args(parser)
+    return parser
 
-    args = parser.parse_args()
+
+def main(args):
     config = parse_arg_to_config(args)
 
     # Initialize Emmental
@@ -183,3 +185,10 @@ if __name__ == "__main__":
         )[0]
         filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
         make_submission_file(model, dataloader, task_name, filepath)
+
+
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+    main(args) 
+    

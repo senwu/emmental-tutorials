@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 from functools import partial
 
@@ -16,6 +17,7 @@ from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_arg import parse_arg, parse_arg_to_config, str2bool
 from utils import str2list, write_to_file
+from submit import make_submission_file
 
 logger = logging.getLogger(__name__)
 
@@ -133,30 +135,30 @@ if __name__ == "__main__":
         superglue_tasks.extend(tasks)
 
     # Build Emmental model
-    superglue_model = EmmentalModel(name=f"SuperGLUE", tasks=superglue_tasks)
+    model = EmmentalModel(name=f"SuperGLUE", tasks=superglue_tasks)
 
     # Load pretrained model if necessary
     if Meta.config["model_config"]["model_path"]:
-        superglue_model.load(Meta.config["model_config"]["model_path"])
+        model.load(Meta.config["model_config"]["model_path"])
 
     # Training
     if args.train:
         emmental_learner = EmmentalLearner()
-        emmental_learner.learn(superglue_model, superglue_dataloaders)
+        emmental_learner.learn(model, superglue_dataloaders)
 
-    scores = superglue_model.score(superglue_dataloaders)
+    scores = model.score(superglue_dataloaders)
 
     # Slice scoring
     # TODO: We currently perform inference 2x: once above and once for slice evaluation
     # This can be improved if it's a bottleneck.
     if args.slices:  # if args.slices, then regular score() will report quality
         for task_name in args.task:
-            scorer = superglue_model.scorers[task_name]
+            scorer = model.scorers[task_name]
             slice_func_dict = slicing.slice_func_dict[task_name]
             for dataloader in superglue_dataloaders:
                 if dataloader.split == "test":
                     continue
-                pred_dict = superglue_model.predict(dataloader, return_preds=True)
+                pred_dict = model.predict(dataloader, return_preds=True)
                 golds = pred_dict["golds"][task_name]
                 probs = pred_dict["probs"][task_name]
                 preds = pred_dict["preds"][task_name]
@@ -190,3 +192,17 @@ if __name__ == "__main__":
             "best_metrics.txt",
             emmental_learner.logging_manager.checkpointer.best_metric_dict,
         )
+
+    # Save submission file
+    for task_name in args.task:
+        dataloader = get_dataloaders(
+            data_dir=args.data_dir,
+            task_name=task_name,
+            splits=["test"],
+            max_sequence_length=args.max_sequence_length,
+            max_data_samples=args.max_data_samples,
+            tokenizer_name=args.bert_model,
+            batch_size=args.batch_size,
+        )[0]
+        filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
+        make_submission_file(model, dataloader, task_name, filepath)

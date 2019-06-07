@@ -64,7 +64,7 @@ def extract_from_cmd(path):
 
     max_seq_match = re.search('--max_sequence_length[ =](\d+)', cmd)
     if max_seq_match:
-        max_seq_len = max_seq_match.group(1)
+        max_seq_len = int(max_seq_match.group(1))
     else:
         max_seq_len = 256
     return bert_model_name, max_seq_len
@@ -100,8 +100,8 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
     
     for task_name, path in zip(TASKS, [cb, copa, multirc, rte, wic, wsc]):
         # TEMP
-        if task_name != "WSC":
-            continue
+        # if task_name != "WSC":
+        #     continue
         # TEMP
 
         bert_model_name, max_seq_len = extract_from_cmd(path)

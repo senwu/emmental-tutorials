@@ -127,12 +127,12 @@ if __name__ == "__main__":
         if args.slices:
             slice_func_dict = slicing.slice_func_dict[task_name]
             dataloaders = slicing.add_slice_labels(task_name, dataloaders, slice_func_dict)
-            tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
+            slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
+            tasks.extend(slice_tasks)
         else:
-            tasks = [task]
+            tasks.append(task)
 
         dataloaders.extend(dataloaders)
-        tasks.extend(tasks)
 
     # Build Emmental model
     model = EmmentalModel(name=f"SuperGLUE", tasks=tasks)

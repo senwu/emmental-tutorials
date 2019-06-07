@@ -14,6 +14,11 @@ def slice_verb(example):
     """Is the target word a verb?"""
     return example.pos == "V"
 
+@slicing_function(fields=["pos"])
+def slice_noun(example):
+    """Is the target word a noun?"""
+    return example.pos == "N"
+
 @slicing_function(fields=["word", "sentence1", "sentence2", "sentence1_idx", "sentence2_idx"])
 def slice_trigram(example):
     """Does the target word share a trigram between sentences?"""
@@ -48,6 +53,7 @@ def slice_mismatch_noun(example):
 slices = [
     slice_base,
     slice_verb,
+    slice_noun,
     slice_trigram,
     slice_mismatch_verb,
     slice_mismatch_noun,

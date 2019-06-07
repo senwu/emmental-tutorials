@@ -119,7 +119,7 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
             task_flow=slice_ind_task_flow,
             loss_func=partial(utils.ce_loss, f"{task_name}_slice_{type}_{slice_name}_head"),
             output_func=partial(utils.output, f"{task_name}_slice_{type}_{slice_name}_head"),
-            scorer=Scorer(metrics=["accuracy"]),
+            scorer=Scorer(metrics=["f1", "accuracy"]),
         )
         tasks.append(task)
 

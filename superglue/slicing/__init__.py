@@ -189,3 +189,30 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
 
     return tasks
 
+
+def score_slices(model, dataloaders, task_names, slice_func_dict):
+    assert isinstance(dataloaders, list)
+    assert isinstance(task_names, list)
+    assert isinstance(slice_func_dict, dict)
+    scores = {}
+    for task_name in task_names:
+        scorer = model.scorers[task_name]
+        for dataloader in dataloaders:
+            pred_dict = model.predict(dataloader, return_preds=True)
+            golds = pred_dict["golds"][task_name]
+            probs = pred_dict["probs"][task_name]
+            preds = pred_dict["preds"][task_name]
+            scores = scorer.score(golds, probs, preds)
+            for slice_name, slice_func in slice_func_dict.items():
+                inds, _ = slice_func(dataloader.dataset)
+                mask = (inds == 1).numpy().astype(bool)
+                slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])    
+                for metric_name, metric_value in slice_scores.items():
+                    identifier = "/".join(
+                        [f"{task_name}:{slice_name}", 
+                        dataloader.data_name,
+                        dataloader.split, 
+                        metric_name]
+                    )
+                    scores[identifier] = metric_value            
+    return scores

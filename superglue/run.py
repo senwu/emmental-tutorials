@@ -149,7 +149,7 @@ if __name__ == "__main__":
     # Slice scoring
     # TODO: We currently perform inference 2x: once above and once for slice evaluation
     # This can be improved if it's a bottleneck.
-    if not args.slices:  # if args.slices, then regular score() will report quality
+    if args.slices:  # if args.slices, then regular score() will report quality
         for task_name in args.task:
             scorer = superglue_model.scorers[task_name]
             slice_func_dict = slicing.slice_func_dict[task_name]

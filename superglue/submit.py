@@ -92,17 +92,16 @@ def make_submission_file(model, dataloader, task_name, filepath):
 @click.option('--WSC', help="Path to WSC model")
 @click.option('--split', default="test", type=click.Choice(["train", "val", "test"]))
 @click.option('--data-dir', default=os.environ["SUPERGLUEDATA"])
+@click.option('--submit-dir', default=f"submissions")
 @click.argument('name')
-def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
-    submit_dir = f"submissions/{name}/"
-    if not os.path.exists(os.path.dirname(submit_dir)):
-        os.makedirs(os.path.dirname(submit_dir))
+def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, wic, wsc):
+    submit_subdir = os.path.join(submit_dir, name)
+    if not os.path.exists(submit_subdir):
+        os.makedirs(submit_subdir)
     
     for task_name, path in zip(TASKS, [cb, copa, multirc, rte, wic, wsc]):
-        # TEMP
-        # if task_name != "WSC":
-        #     continue
-        # TEMP
+        if not path:
+            continue
 
         bert_model_name, max_seq_len = extract_from_cmd(path)
         msg = (f"Using {bert_model_name} and max_sequence_len={max_seq_len} for task "
@@ -136,10 +135,10 @@ def make_submission(name, split, data_dir, cb, copa, multirc, rte, wic, wsc):
         # TEMP
 
         filename = f'{task_name}.jsonl'
-        filepath = os.path.join(submit_dir, filename)
+        filepath = os.path.join(submit_subdir, filename)
         make_submission_file(model, dataloaders[-1], task_name, filepath)
 
-    os.chdir(submit_dir)
+    os.chdir(submit_subdir)
     os.system("zip -r submission.zip *.jsonl")
     os.chdir("..")
 

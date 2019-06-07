@@ -198,12 +198,14 @@ def score_slices(model, dataloaders, task_names, slice_func_dict):
     for task_name in task_names:
         scorer = model.scorers[task_name]
         for dataloader in dataloaders:
+            logging.info(f"Evaluating on task {task_name}, {dataloader.split} split")
             pred_dict = model.predict(dataloader, return_preds=True)
             golds = pred_dict["golds"][task_name]
             probs = pred_dict["probs"][task_name]
             preds = pred_dict["preds"][task_name]
             scores = scorer.score(golds, probs, preds)
             for slice_name, slice_func in slice_func_dict.items():
+                logging.info(f"Evaluating slice {slice_name}")
                 inds, _ = slice_func(dataloader.dataset)
                 mask = (inds == 1).numpy().astype(bool)
                 slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])    

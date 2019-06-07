@@ -123,7 +123,7 @@ def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, w
         dataloaders = get_dataloaders(
             data_dir,
             task_name=task_name,
-            splits=["test"], # TODO: replace with ['split'] and update below
+            splits=["val", "test"], # TODO: replace with ['split'] and update below
             max_data_samples=None,
             max_sequence_length=max_seq_len,
             tokenizer_name=bert_model_name,
@@ -131,7 +131,7 @@ def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, w
             uid="uids",
         )
         # TEMP: Sanity check val performance
-        # logging.info(model.score(dataloaders[0]))
+        logging.info(model.score(dataloaders[0]))
         # TEMP
 
         filename = f'{task_name}.jsonl'

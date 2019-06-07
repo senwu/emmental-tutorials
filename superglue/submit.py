@@ -56,13 +56,13 @@ def extract_from_cmd(path):
     with open(os.path.join(log_dir, "cmd.txt")) as f:
         cmd = f.read()
 
-    bert_model_match = re.search('--bert_model[ =](bert-\S+)', cmd)
+    bert_model_match = re.search(r'--bert_model[ =](bert-\S+)', cmd)
     if bert_model_match:
         bert_model_name = bert_model_match.group(1)
     else:
         bert_model_name = 'bert-large-cased'
 
-    max_seq_match = re.search('--max_sequence_length[ =](\d+)', cmd)
+    max_seq_match = re.search(r'--max_sequence_length[ =](\d+)', cmd)
     if max_seq_match:
         max_seq_len = int(max_seq_match.group(1))
     else:
@@ -127,11 +127,11 @@ def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, w
             max_data_samples=None,
             max_sequence_length=max_seq_len,
             tokenizer_name=bert_model_name,
-            batch_size=16,
+            batch_size=4,
             uid="uids",
         )
         # TEMP: Sanity check val performance
-        logging.info(model.score(dataloaders[0]))
+        logging.info(f"Valid score: {model.score(dataloaders[0])}")
         # TEMP
 
         filename = f'{task_name}.jsonl'

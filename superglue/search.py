@@ -156,19 +156,6 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "--search_metric",
-        type=str,
-        default=None,
-        help="Metric from metrics_path that we should optimize for",
-    )
-    parser.add_argument(
-        "--search_metric_mode",
-        type=str,
-        choices=["max", "min"],
-        default="max",
-        help="Do we want to save the max or min of this search metric?",
-    )
-    parser.add_argument(
         "--config",
         type=str,
         required=True,

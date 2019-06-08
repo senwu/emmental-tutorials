@@ -92,9 +92,11 @@ def get_parser():
 
 
 def main(args):
-    config = parse_arg_to_config(args)
+    # Ensure that global state is fresh
+    Meta.reset()
 
     # Initialize Emmental
+    config = parse_arg_to_config(args)
     emmental.init(config["meta_config"]["log_path"], config=config)
 
     # Save command line argument into file

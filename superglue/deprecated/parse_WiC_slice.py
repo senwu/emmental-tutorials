@@ -17,7 +17,7 @@ def get_WiC_dataloaders(
     task_name="WiC",
     splits=["train", "val", "test"],
     max_data_samples=None,
-    max_sequence_length=128,
+    max_sequence_length=256,
     tokenizer_name="bert-base-uncased",
     batch_size=16,
     slice_func_dict = {},

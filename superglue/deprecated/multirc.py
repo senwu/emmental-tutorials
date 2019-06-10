@@ -65,7 +65,7 @@ def add_application_args(parser):
     )
 
     parser.add_argument(
-        "--max_sequence_length", type=int, default=200, help="Maximum sentence length"
+        "--max_sequence_length", type=int, default=256, help="Maximum sentence length"
     )
 
 

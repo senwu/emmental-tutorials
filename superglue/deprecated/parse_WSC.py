@@ -17,7 +17,7 @@ def get_WSC_dataloaders(
     task_name="WSC",
     splits=["train", "val", "test"],
     max_data_samples=None,
-    max_sequence_length=128,
+    max_sequence_length=256,
     tokenizer_name="bert-base-uncased",
     batch_size=16,
 ):

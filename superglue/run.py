@@ -118,7 +118,7 @@ def main(args):
     tasks = []
 
     for task_name in args.task:
-        dataloaders = get_dataloaders(
+        task_dataloaders = get_dataloaders(
             data_dir=args.data_dir,
             task_name=task_name,
             splits=["train", "val", "test"],
@@ -136,7 +136,7 @@ def main(args):
         else:
             tasks.append(task)
 
-        dataloaders.extend(dataloaders)
+        dataloaders.extend(task_dataloaders)
 
     # Build Emmental model
     model = EmmentalModel(name=f"SuperGLUE", tasks=tasks)

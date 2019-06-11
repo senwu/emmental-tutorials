@@ -130,7 +130,7 @@ def main(args):
         task = models.model[task_name](args.bert_model)
         if args.slices:
             slice_func_dict = slicing.slice_func_dict[task_name]
-            dataloaders = slicing.add_slice_labels(task_name, dataloaders, slice_func_dict)
+            dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
             slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
             tasks.extend(slice_tasks)
         else:

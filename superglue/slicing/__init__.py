@@ -13,18 +13,18 @@ from models import utils
 from . import master_module
 
 from . import \
-    CB_slices, WiC_slices, RTE_slices #; COPA_slices,; MultiRC_slices,; WSC_slices,
+    CB_sfs, WiC_sfs, RTE_sfs #; COPA_sfs,; MultiRC_sfs,; WSC_sfs,
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
 
 slice_func_dict = {
-    "CB": CB_slices.slice_func_dict,
-    # "COPA": COPA_slices.slice_func_dict,
-    # "MultiRC": MultiRC_slices.slice_func_dict,
-    "RTE": RTE_slices.slice_func_dict,
-    "WiC": WiC_slices.slice_func_dict,
-    # "WSC": WSC_slices.slice_func_dict,
+    "CB": CB_sfs.slice_func_dict,
+    # "COPA": COPA_sfs.slice_func_dict,
+    # "MultiRC": MultiRC_sfs.slice_func_dict,
+    "RTE": RTE_sfs.slice_func_dict,
+    "WiC": WiC_sfs.slice_func_dict,
+    # "WSC": WSC_sfs.slice_func_dict,
 }
 
 logger = logging.getLogger(__name__)

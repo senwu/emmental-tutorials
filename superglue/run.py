@@ -62,6 +62,7 @@ def add_application_args(parser):
 
     parser.add_argument("--batch_size", type=int, default=16, help="batch size")
     parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
+    parser.add_argument("--augmentations", type=str2bool, default=False, help="Whether to include augmentations")
 
     parser.add_argument(
         "--slice_hidden_dim", type=int, default=1024, help="Slice hidden dimension size"
@@ -130,6 +131,7 @@ def main(args):
             max_data_samples=args.max_data_samples,
             tokenizer_name=args.bert_model,
             batch_size=args.batch_size,
+            augment=args.augmentations,
         )
         task = models.model[task_name](
             args.bert_model, 
@@ -191,6 +193,7 @@ def main(args):
             max_data_samples=args.max_data_samples,
             tokenizer_name=args.bert_model,
             batch_size=args.batch_size,
+            augment=False,
         )[0]
         filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
         make_submission_file(model, dataloader, task_name, filepath)

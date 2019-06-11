@@ -95,7 +95,8 @@ def make_submission_file(model, dataloader, task_name, filepath):
 @click.option('--data_dir', default=os.environ["SUPERGLUEDATA"])
 @click.option('--submit_dir', default=f"submissions")
 @click.argument('name')
-def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, wic, wsc):
+def make_submission(name, split, data_dir, submit_dir, batch_size, 
+                    cb, copa, multirc, rte, wic, wsc):
     submit_subdir = os.path.join(submit_dir, name)
     if not os.path.exists(submit_subdir):
         os.makedirs(submit_subdir)
@@ -128,7 +129,7 @@ def make_submission(name, split, data_dir, submit_dir, cb, copa, multirc, rte, w
             max_data_samples=None,
             max_sequence_length=max_seq_len,
             tokenizer_name=bert_model_name,
-            batch_size=args.batch_size,
+            batch_size=batch_size,
             uid="uids",
         )
         # TEMP: Sanity check val performance

@@ -76,6 +76,10 @@ def add_application_args(parser):
     )
 
     parser.add_argument(
+        "--last_hidden_dropout_prob", type=float, default=0.0, help="Dropout on last layer of bert."
+    )
+
+    parser.add_argument(
         "--train", type=str2bool, default=True, help="Whether to train the model"
     )
 
@@ -127,7 +131,10 @@ def main(args):
             tokenizer_name=args.bert_model,
             batch_size=args.batch_size,
         )
-        task = models.model[task_name](args.bert_model)
+        task = models.model[task_name](
+            args.bert_model, 
+            last_hidden_dropout_prob=args.last_hidden_dropout_prob
+        )
         if args.slices:
             slice_func_dict = slicing.slice_func_dict[task_name]
             dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)

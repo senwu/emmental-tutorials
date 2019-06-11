@@ -17,7 +17,7 @@ sys.path.append("..")  # Adds higher directory to python modules path.
 TASK_NAME = "COPA"
 
 
-def build_model(bert_model_name):
+def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024
@@ -44,7 +44,9 @@ def build_model(bert_model_name):
         module_pool=nn.ModuleDict(
             {
                 "bert_module": bert_module,
-                "bert_last_cls": BertLastCLSModule(),
+                "bert_last_cls": BertLastCLSModule(
+                    dropout_prob=last_hidden_dropout_prob
+                ),
                 "linear_module": nn.Linear(bert_output_dim, 1),
                 f"{TASK_NAME}_pred_head": ChoiceModule(task_cardinality),
             }

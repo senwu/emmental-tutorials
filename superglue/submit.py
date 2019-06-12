@@ -17,6 +17,8 @@ from models.wic import build_model as build_model_wic
 from models.wsc import build_model as build_model_wsc
 from task_config import SuperGLUE_LABEL_INVERSE, SuperGLUE_TASK_SPLIT_MAPPING
 
+logger = logging.getLogger(__name__)
+
 build_model = {
     "CB": build_model_cb,
     "COPA": build_model_copa,
@@ -91,11 +93,11 @@ def make_submission_file(model, dataloader, task_name, filepath):
             label = str(SuperGLUE_LABEL_INVERSE[task_name][y]).lower()
             preds_formatted.append({"idx": idx, "label": label})
             probs_formatted.append({"idx": idx, "probs": str(probs[idx])})
-        logging.info(f"Writing probabilities to {probs_filepath}")
+        logger.info(f"Writing probabilities to {probs_filepath}")
         with jsonlines.open(probs_filepath, mode='w') as writer:
             writer.write_all(probs_formatted)
 
-    logging.info(f"Writing predictions to {filepath}")
+    logger.info(f"Writing predictions to {filepath}")
     with jsonlines.open(filepath, mode='w') as writer:
         writer.write_all(preds_formatted)
 
@@ -124,7 +126,7 @@ def make_submission(name, split, data_dir, submit_dir, batch_size,
         bert_model_name, max_seq_len = extract_from_cmd(path)
         msg = (f"Using {bert_model_name} and max_sequence_len={max_seq_len} for task "
                f"{task_name}")
-        logging.info(msg)
+        logger.info(msg)
 
         # Build model
         task = build_model[task_name](bert_model_name)
@@ -149,7 +151,7 @@ def make_submission(name, split, data_dir, submit_dir, batch_size,
             uid="uids",
         )
         # TEMP: Sanity check val performance
-        logging.info(f"Valid score: {model.score(dataloaders[0])}")
+        logger.info(f"Valid score: {model.score(dataloaders[0])}")
         # TEMP
 
         filename = f'{task_name}.jsonl'

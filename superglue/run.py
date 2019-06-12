@@ -163,7 +163,7 @@ def main(args):
         slice_func_dict = {}
         for task_name in args.task:
             slice_func_dict.update(slicing.slice_func_dict[task_name])
-        scores = slicing.score_slices(model, dataloaders, args.tasks, slice_func_dict)
+        scores = slicing.score_slices(model, dataloaders, args.task, slice_func_dict)
     else:
         scores = model.score(dataloaders)
 

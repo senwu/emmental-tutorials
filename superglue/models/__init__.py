@@ -1,4 +1,4 @@
-from . import cb, copa, multirc, rte, wic, wsc, swag
+from . import cb, copa, multirc, rte, wic, wsc, swag, semcor
 
 model = {
     "MultiRC": multirc.build_model,
@@ -8,4 +8,5 @@ model = {
     "COPA": copa.build_model,
     "WSC": wsc.build_model,
     "SWAG": swag.build_model,
+    "SemCor": semcor.build_model,
 }

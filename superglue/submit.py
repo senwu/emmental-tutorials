@@ -2,6 +2,7 @@ from collections import defaultdict
 import logging
 import os
 import re
+import shutil
 
 import click
 import jsonlines
@@ -71,6 +72,44 @@ def extract_from_cmd(path):
         max_seq_len = 256
     return bert_model_name, max_seq_len
 
+
+def predict_and_write(task_name, path, data_dir, submit_subdir, batch_size):
+    bert_model_name, max_seq_len = extract_from_cmd(path)
+    msg = (f"Using {bert_model_name} and max_sequence_len={max_seq_len} for task "
+            f"{task_name}")
+    logger.info(msg)
+
+    # Build model
+    task = build_model[task_name](bert_model_name)
+    model = EmmentalModel(name=f"SuperGLUE_{task_name}", tasks=[task])
+    try:
+        model.load(path)
+    except UnboundLocalError:
+        msg = ("Failed to load state dict; confirm that your model was saved with "
+                "a command such as 'torch.save(model.state_dict(), PATH)'")
+        logging.error(msg)
+        raise
+
+    # Build dataloaders
+    dataloaders = get_dataloaders(
+        data_dir,
+        task_name=task_name,
+        splits=["val", "test"], # TODO: replace with ['split'] and update below
+        max_data_samples=None,
+        max_sequence_length=max_seq_len,
+        tokenizer_name=bert_model_name,
+        batch_size=batch_size,
+        uid="uids",
+    )
+    # TEMP: Sanity check val performance
+    logger.info(f"Valid score: {model.score(dataloaders[0])}")
+    # TEMP
+
+    filename = f'{task_name}.jsonl'
+    filepath = os.path.join(submit_subdir, filename)
+    make_submission_file(model, dataloaders[-1], task_name, filepath)    
+
+
 def make_submission_file(model, dataloader, task_name, filepath):
     output = model.predict(dataloader, return_preds=True)
     preds = output["preds"][task_name]
@@ -81,7 +120,7 @@ def make_submission_file(model, dataloader, task_name, filepath):
         "probs",
         os.path.basename(filepath).replace(".jsonl", "_probs.jsonl")
     )
-    if not os.path.exists(probs_filepath):
+    if not os.path.exists(os.path.dirname(probs_filepath)):
         os.mkdir(os.path.dirname(probs_filepath))
 
     if task_name == "MultiRC":
@@ -123,40 +162,15 @@ def make_submission(name, split, data_dir, submit_dir, batch_size,
         if not path:
             continue
 
-        bert_model_name, max_seq_len = extract_from_cmd(path)
-        msg = (f"Using {bert_model_name} and max_sequence_len={max_seq_len} for task "
-               f"{task_name}")
-        logger.info(msg)
+        predictions_path = os.path.join(os.path.dirname(path), f"{task_name}.jsonl")
+        if os.path.exists(predictions_path):
+            logger.info(f"{task_name}: Found predictions file.")
+            shutil.copy(predictions_path, submit_subdir)
+        else:
+            logger.info(f"{task_name}: No predictions file found. Generating predictions...")
+            predict_and_write(task_name, path, data_dir, submit_subdir, batch_size)
 
-        # Build model
-        task = build_model[task_name](bert_model_name)
-        model = EmmentalModel(name=f"SuperGLUE_{task_name}", tasks=[task])
-        try:
-            model.load(path)
-        except UnboundLocalError:
-            msg = ("Failed to load state dict; confirm that your model was saved with "
-                   "a command such as 'torch.save(model.state_dict(), PATH)'")
-            logging.error(msg)
-            raise
-
-        # Build dataloaders
-        dataloaders = get_dataloaders(
-            data_dir,
-            task_name=task_name,
-            splits=["val", "test"], # TODO: replace with ['split'] and update below
-            max_data_samples=None,
-            max_sequence_length=max_seq_len,
-            tokenizer_name=bert_model_name,
-            batch_size=batch_size,
-            uid="uids",
-        )
-        # TEMP: Sanity check val performance
-        logger.info(f"Valid score: {model.score(dataloaders[0])}")
-        # TEMP
-
-        filename = f'{task_name}.jsonl'
-        filepath = os.path.join(submit_subdir, filename)
-        make_submission_file(model, dataloaders[-1], task_name, filepath)
+    shutil.copy(os.path.join(submit_dir, "AX.jsonl"), submit_subdir)
 
     os.chdir(submit_subdir)
     os.system("zip -r submission.zip *.jsonl")

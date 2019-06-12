@@ -139,7 +139,7 @@ def main(args):
         )
         if args.slices:
             slice_func_dict = slicing.slice_func_dict[task_name]
-            dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
+            task_dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
             slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
             tasks.extend(slice_tasks)
         else:
@@ -159,7 +159,9 @@ def main(args):
         emmental_learner = EmmentalLearner()
         emmental_learner.learn(model, dataloaders)
 
-    if args.slices:
+    # If model is slice-aware, slice scores will be calculated from slice heads
+    # If model is not slice-aware, manually calculate performance on slices
+    if not args.slices: 
         slice_func_dict = {}
         for task_name in args.task:
             slice_func_dict.update(slicing.slice_func_dict[task_name])
@@ -185,18 +187,10 @@ def main(args):
 
     # Save submission file
     for task_name in args.task:
-        dataloader = get_dataloaders(
-            data_dir=args.data_dir,
-            task_name=task_name,
-            splits=["test"],
-            max_sequence_length=args.max_sequence_length,
-            max_data_samples=args.max_data_samples,
-            tokenizer_name=args.bert_model,
-            batch_size=args.batch_size,
-            augment=False,
-        )[0]
+        dataloaders = [d for d in dataloaders if d.split == "test"]
+        assert(len(dataloaders) == 1)
         filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
-        make_submission_file(model, dataloader, task_name, filepath)
+        make_submission_file(model, dataloaders[0], task_name, filepath)
 
 
 if __name__ == "__main__":

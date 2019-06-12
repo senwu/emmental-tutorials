@@ -203,7 +203,8 @@ def score_slices(model, dataloaders, task_names, slice_func_dict):
             golds = pred_dict["golds"][task_name]
             probs = pred_dict["probs"][task_name]
             preds = pred_dict["preds"][task_name]
-            scores = scorer.score(golds, probs, preds)
+            split_scores = scorer.score(golds, probs, preds)
+            scores.update(split_scores)
             for slice_name, slice_func in slice_func_dict.items():
                 logging.info(f"Evaluating slice {slice_name}")
                 inds, _ = slice_func(dataloader.dataset)

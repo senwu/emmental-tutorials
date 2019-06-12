@@ -15,7 +15,6 @@ def slice_result(example):
 
 slices = [
     slice_base,
-    slice_result,
 ]
 
 slice_func_dict = {slice.__name__: slice for slice in slices}

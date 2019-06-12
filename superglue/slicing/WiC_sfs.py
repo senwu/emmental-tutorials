@@ -53,10 +53,10 @@ def slice_mismatch_noun(example):
 slices = [
     slice_base,
     slice_verb,
-    # slice_noun,
-    # slice_trigram,
-    # slice_mismatch_verb,
-    # slice_mismatch_noun,
+    slice_noun,
+    slice_trigram,
+    slice_mismatch_verb,
+    slice_mismatch_noun,
 ]
 
 slice_func_dict = {slice.__name__: slice for slice in slices}

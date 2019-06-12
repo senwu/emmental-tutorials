@@ -13,12 +13,13 @@ from models import utils
 from . import master_module
 
 from . import \
-    CB_sfs, WiC_sfs, RTE_sfs #; COPA_sfs,; MultiRC_sfs,; WSC_sfs,
+    general_sfs, CB_sfs, WiC_sfs, RTE_sfs #; COPA_sfs,; MultiRC_sfs,; WSC_sfs,
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
 
 slice_func_dict = {
+    "general": general_sfs.slice_func_dict,
     "CB": CB_sfs.slice_func_dict,
     # "COPA": COPA_sfs.slice_func_dict,
     # "MultiRC": MultiRC_sfs.slice_func_dict,
@@ -70,7 +71,7 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
 
     # sanity check the model
     assert f"{task_name}_feature" in [
-        i["name"] for i in base_task_flow
+        x["name"] for x in base_task_flow
     ], f"{task_name}_feature should in the task module_pool"
 
     assert (

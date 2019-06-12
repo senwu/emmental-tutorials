@@ -115,8 +115,8 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         uid="uids",
         X_dict={
             "uids": uids,
-            "sent1": sent1s,
-            "sent2": sent2s,
+            "sentence1": sent1s,
+            "sentence2": sent2s,
             "choice1": choice1s,
             "choice2": choice2s,
             "token1_ids": bert_token1_ids,

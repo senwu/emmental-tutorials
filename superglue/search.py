@@ -137,7 +137,7 @@ def main(args):
 
         # print command being run
         print("*" * 80)
-        print("python launch.py", " ".join(arg_list))
+        print("python run.py", " ".join(arg_list))
         print("*" * 80)
         parser = get_parser()
         launch_args = parser.parse_args(arg_list)

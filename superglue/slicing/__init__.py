@@ -12,8 +12,7 @@ from models import utils
 
 from . import master_module
 
-from . import \
-    general_sfs, CB_sfs, WiC_sfs, RTE_sfs COPA_sfs, MultiRC_sfs, WSC_sfs,
+from . import general_sfs, CB_sfs, WiC_sfs, RTE_sfs, COPA_sfs, MultiRC_sfs, WSC_sfs
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 

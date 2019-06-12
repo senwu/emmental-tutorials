@@ -44,7 +44,7 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
         module_pool=nn.ModuleDict(
             {
                 "bert_module": bert_module,
-                "bert_last_cls": BertLastCLSModule(
+                f"{TASK_NAME}_feature": BertLastCLSModule(
                     dropout_prob=last_hidden_dropout_prob
                 ),
                 "linear_module": nn.Linear(bert_output_dim, 1),
@@ -64,12 +64,12 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
             },
             {
                 "name": "choice0_bert_last_cls",
-                "module": "bert_last_cls",
+                "module": f"{TASK_NAME}_feature",
                 "inputs": [("choice0", 0)],
             },
             {
                 "name": "choice1_bert_last_cls",
-                "module": "bert_last_cls",
+                "module": f"{TASK_NAME}_feature",
                 "inputs": [("choice1", 0)],
             },
             {

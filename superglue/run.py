@@ -62,6 +62,8 @@ def add_application_args(parser):
 
     parser.add_argument("--batch_size", type=int, default=16, help="batch size")
     parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
+    parser.add_argument("--general_slices", type=str2bool, default=False, help="Whether to include general slices")
+
     parser.add_argument("--augmentations", type=str2bool, default=False, help="Whether to include augmentations")
 
     parser.add_argument(
@@ -138,8 +140,15 @@ def main(args):
             last_hidden_dropout_prob=args.last_hidden_dropout_prob
         )
         if args.slices:
+            logger.info("Initializing task-specific slices")
             slice_func_dict = slicing.slice_func_dict[task_name]
+            # Include general purpose slices
+            if args.general_slices:
+                logger.info("Including general slices")
+                slice_func_dict.update(slicing.slice_func_dict["general"])
+
             task_dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
+
             slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
             tasks.extend(slice_tasks)
         else:
@@ -163,8 +172,13 @@ def main(args):
     # If model is not slice-aware, manually calculate performance on slices
     if not args.slices: 
         slice_func_dict = {}
-        for task_name in args.task:
-            slice_func_dict.update(slicing.slice_func_dict[task_name])
+        slice_keys = args.task
+        if args.general_slices:
+            slice_keys.append("general")
+
+        for k in slice_keys:
+            slice_func_dict.update(slicing.slice_func_dict[k])
+
         scores = slicing.score_slices(model, dataloaders, args.task, slice_func_dict)
     else:
         scores = model.score(dataloaders)

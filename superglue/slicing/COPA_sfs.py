@@ -13,8 +13,10 @@ def slice_result(example):
     """Is the Q 'What happened as a result?' (not 'What was the cause of this?')"""
     return example.sentence2 == "What happened as a result?"
 
+# TODO: At the moment, slices for COPA are not suported because they require 
+# architecture changes
 slices = [
-    slice_base,
+#    slice_base,
 ]
 
 slice_func_dict = {slice.__name__: slice for slice in slices}

@@ -29,10 +29,10 @@ build_model = {
 TASKS = ["CB", "COPA", "MultiRC", "RTE", "WiC", "WSC"]
 
 
-def format_multirc_preds(preds, dataloader):
+def format_multirc_preds(dataloader, preds):
     # Make prediction map
-    paragraphs = paragraphs = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
-    for idx, pred in enumerate(preds):
+    paragraphs = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    for idx, pred in enumerate(zip(preds)):
         pid = dataloader.dataset.X_dict["pids"][idx]
         qid = dataloader.dataset.X_dict["qids"][idx]
         aid = dataloader.dataset.X_dict["aids"][idx]
@@ -43,8 +43,8 @@ def format_multirc_preds(preds, dataloader):
         p_dict = {"idx": pid, "paragraph": {"questions": []}}
         for qid, question in questions.items():
             q_dict = {"idx": qid, "answers": []}
-            for aid, y in question.items():
-                label = str(SuperGLUE_LABEL_INVERSE["MultiRC"][y]).lower()
+            for aid, pred in question.items():
+                label = str(SuperGLUE_LABEL_INVERSE["MultiRC"][pred]).lower()
                 answer = {"idx": aid, "label": str(label)}
                 q_dict["answers"].append(answer)
             p_dict["paragraph"]["questions"].append(q_dict)
@@ -70,14 +70,30 @@ def extract_from_cmd(path):
     return bert_model_name, max_seq_len
 
 def make_submission_file(model, dataloader, task_name, filepath):
-    preds = model.predict(dataloader, return_preds=True)["preds"][task_name]
+    output = model.predict(dataloader, return_preds=True)
+    preds = output["preds"][task_name]
+    probs = output["probs"][task_name]
+    
+    probs_filepath = os.path.join(
+        os.path.dirname(filepath), 
+        "probs",
+        os.path.basename(filepath).replace(".jsonl", "_probs.jsonl")
+    )
+    if not os.path.exists(probs_filepath):
+        os.mkdir(os.path.dirname(probs_filepath))
+
     if task_name == "MultiRC":
-        preds_formatted = format_multirc_preds(preds, dataloader)
+        preds_formatted = format_multirc_preds(dataloader, preds)
     else:
+        probs_formatted = []
         preds_formatted = []
         for idx, y in enumerate(preds):
             label = str(SuperGLUE_LABEL_INVERSE[task_name][y]).lower()
             preds_formatted.append({"idx": idx, "label": label})
+            probs_formatted.append({"idx": idx, "probs": str(probs[idx])})
+        logging.info(f"Writing probabilities to {probs_filepath}")
+        with jsonlines.open(probs_filepath, mode='w') as writer:
+            writer.write_all(probs_formatted)
 
     logging.info(f"Writing predictions to {filepath}")
     with jsonlines.open(filepath, mode='w') as writer:

@@ -32,6 +32,12 @@ class SliceMasterModule(nn.Module):
             ]
         )
 
+        if len([
+                F.softmax(immediate_ouput_dict[slice_ind_name][0])[:, 0].unsqueeze(1)
+                for slice_ind_name in slice_ind_names
+            ]) == 0:
+            import pdb; pdb.set_trace()
+
         Q = torch.cat(
             [
                 F.softmax(immediate_ouput_dict[slice_ind_name][0])[:, 0].unsqueeze(1)

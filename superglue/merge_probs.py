@@ -24,6 +24,9 @@ def merge_probs(root, task_name):
     INFILES = subprocess.check_output(f'find {root} -type f -name "*probs.jsonl"', shell=True).split()
     OUTFILE = os.path.join(root, f"{task_name}.jsonl")
 
+    # Print evaluation scores
+    subprocess.call('find ' + root + ' -type f -name "best_metrics.txt" -exec cat {} \;', shell=True)
+
     preds_dict = defaultdict(list)
     for probs_file in INFILES:
         with jsonlines.open(probs_file, 'r') as reader:

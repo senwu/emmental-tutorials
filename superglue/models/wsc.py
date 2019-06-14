@@ -17,7 +17,9 @@ sys.path.append("..")  # Adds higher directory to python modules path.
 TASK_NAME = "WSC"
 
 
-def build_model(bert_model_name):
+def build_model(bert_model_name, last_hidden_dropout_prob=None):
+    if last_hidden_dropout_prob:
+        raise NotImplementedError(f"TODO: last_hidden_dropout_prob for {TASK_NAME}")
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024

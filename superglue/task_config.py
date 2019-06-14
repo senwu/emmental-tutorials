@@ -14,6 +14,7 @@ SuperGLUE_TASK_SPLIT_MAPPING = {
 #    },
     #### External Task ####
     "SWAG": {"train": "train.csv", "val": "val.csv", "test": "test.csv"},
+    "SemCor": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
 }
 
 SuperGLUE_LABEL_MAPPING = {
@@ -24,6 +25,7 @@ SuperGLUE_LABEL_MAPPING = {
     "WSC": {True: 1, False: 2},
     "MultiRC": {True: 1, False: 2},
     "SWAG": {0: 1, 1: 2, 2: 3, 3: 4},
+    "SemCor": {True: 1, False: 2},
 }
 
 SuperGLUE_LABEL_INVERSE = {}
@@ -38,4 +40,5 @@ SuperGLUE_TASK_METRIC_MAPPING = {
     "WiC": ["accuracy"],
     "WSC": ["accuracy"],
     "SWAG": ["accuracy"],
+    "SemCor": ["accuracy"],
 }

@@ -1,4 +1,4 @@
-from . import cb, copa, multirc, rte, wic, wsc, swag
+from . import cb, copa, multirc, rte, wic, wsc, swag, semcor
 
 parser = {
     "MultiRC": multirc.parse,
@@ -8,4 +8,5 @@ parser = {
     "RTE": rte.parse,
     "WSC": wsc.parse,
     "SWAG": swag.parse,
+    "SemCor": semcor.parse,
 }

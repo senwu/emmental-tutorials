@@ -34,7 +34,7 @@ def accuracy_macro_f1(golds, probs, preds, uids):
 #########################################
 
 
-def build_model(bert_model_name):
+def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024
@@ -64,7 +64,9 @@ def build_model(bert_model_name):
         module_pool=nn.ModuleDict(
             {
                 "bert_module": bert_module,
-                f"{TASK_NAME}_feature": BertLastCLSModule(),
+                f"{TASK_NAME}_feature": BertLastCLSModule(
+                    dropout_prob=last_hidden_dropout_prob
+                ),
                 f"{TASK_NAME}_pred_head": nn.Linear(bert_output_dim, task_cardinality),
             }
         ),

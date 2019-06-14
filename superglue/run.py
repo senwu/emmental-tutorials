@@ -62,6 +62,9 @@ def add_application_args(parser):
 
     parser.add_argument("--batch_size", type=int, default=16, help="batch size")
     parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
+    parser.add_argument("--general_slices", type=str2bool, default=False, help="Whether to include general slices")
+
+    parser.add_argument("--augmentations", type=str2bool, default=False, help="Whether to include augmentations")
 
     parser.add_argument(
         "--slice_hidden_dim", type=int, default=1024, help="Slice hidden dimension size"
@@ -73,6 +76,10 @@ def add_application_args(parser):
 
     parser.add_argument(
         "--max_sequence_length", type=int, default=256, help="Maximum sentence length"
+    )
+
+    parser.add_argument(
+        "--last_hidden_dropout_prob", type=float, default=0.0, help="Dropout on last layer of bert."
     )
 
     parser.add_argument(
@@ -126,11 +133,22 @@ def main(args):
             max_data_samples=args.max_data_samples,
             tokenizer_name=args.bert_model,
             batch_size=args.batch_size,
+            augment=args.augmentations,
         )
-        task = models.model[task_name](args.bert_model)
+        task = models.model[task_name](
+            args.bert_model, 
+            last_hidden_dropout_prob=args.last_hidden_dropout_prob
+        )
         if args.slices:
+            logger.info("Initializing task-specific slices")
             slice_func_dict = slicing.slice_func_dict[task_name]
-            dataloaders = slicing.add_slice_labels(task_name, dataloaders, slice_func_dict)
+            # Include general purpose slices
+            if args.general_slices:
+                logger.info("Including general slices")
+                slice_func_dict.update(slicing.slice_func_dict["general"])
+
+            task_dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
+
             slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
             tasks.extend(slice_tasks)
         else:
@@ -150,11 +168,18 @@ def main(args):
         emmental_learner = EmmentalLearner()
         emmental_learner.learn(model, dataloaders)
 
-    if args.slices:
+    # If model is slice-aware, slice scores will be calculated from slice heads
+    # If model is not slice-aware, manually calculate performance on slices
+    if not args.slices: 
         slice_func_dict = {}
-        for task_name in args.task:
-            slice_func_dict.update(slicing.slice_func_dict[task_name])
-        scores = slicing.score_slices(model, dataloaders, args.tasks, slice_func_dict)
+        slice_keys = args.task
+        if args.general_slices:
+            slice_keys.append("general")
+
+        for k in slice_keys:
+            slice_func_dict.update(slicing.slice_func_dict[k])
+
+        scores = slicing.score_slices(model, dataloaders, args.task, slice_func_dict)
     else:
         scores = model.score(dataloaders)
 
@@ -176,17 +201,10 @@ def main(args):
 
     # Save submission file
     for task_name in args.task:
-        dataloader = get_dataloaders(
-            data_dir=args.data_dir,
-            task_name=task_name,
-            splits=["test"],
-            max_sequence_length=args.max_sequence_length,
-            max_data_samples=args.max_data_samples,
-            tokenizer_name=args.bert_model,
-            batch_size=args.batch_size,
-        )[0]
+        dataloaders = [d for d in dataloaders if d.split == "test"]
+        assert(len(dataloaders) == 1)
         filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
-        make_submission_file(model, dataloader, task_name, filepath)
+        make_submission_file(model, dataloaders[0], task_name, filepath)
 
 
 if __name__ == "__main__":

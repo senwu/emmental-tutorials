@@ -9,8 +9,8 @@ Combine the probabilities from all runs
 Sample command sequence:
 python cross_validation.py --task_name WiC --cv_dir $SUPERGLUEDATA/WiC/folds --data_dir $SUPERGLUEDATA --folds 10
 [UPDATE config.json with only data_dir in the search space]
-python search.py --config config.json --max_search 10 --logdir /path/to/logs
-python merge_probs.py --task_name WiC --root /path/to/logs
+python search.py --config config.json --max_search 10
+python merge_probs.py --task_name WiC --root /path/to/cv_dir
 
 """
 

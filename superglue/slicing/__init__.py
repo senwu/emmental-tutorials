@@ -25,6 +25,7 @@ slice_func_dict = {
     "RTE": RTE_sfs.slice_func_dict,
     "WiC": WiC_sfs.slice_func_dict,
     "WSC": WSC_sfs.slice_func_dict,
+    "SWAG": {},
 }
 
 logger = logging.getLogger(__name__)

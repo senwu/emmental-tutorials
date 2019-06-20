@@ -43,6 +43,12 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
     bert_token1_ids = []
     bert_token2_ids = []
 
+    bert_token1_masks = []
+    bert_token2_masks = []
+
+    bert_token1_segments = []
+    bert_token2_segments = []
+
     # Check the maximum token length
     max_len = -1
 
@@ -98,6 +104,24 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         token1_ids = tokenizer.convert_tokens_to_ids(tokens1)
         token2_ids = tokenizer.convert_tokens_to_ids(tokens2)
 
+        padding1 = [0] * (max_sequence_length - len(token1_ids))
+        padding2 = [0] * (max_sequence_length - len(token2_ids))
+
+        token1_masks = [1] * len(token1_ids)
+        token2_masks = [1] * len(token2_ids)
+
+        token1_segments = [0] * len(token1_ids)
+        token2_segments = [0] * len(token2_ids)
+
+        token1_ids += padding1
+        token2_ids += padding2
+
+        token1_masks += padding1
+        token2_masks += padding2
+
+        token1_segments += padding1
+        token2_segments += padding2
+
         if len(token1_ids) > max_len:
             max_len = len(token1_ids)
         if len(token2_ids) > max_len:
@@ -105,6 +129,12 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
 
         bert_token1_ids.append(torch.LongTensor(token1_ids))
         bert_token2_ids.append(torch.LongTensor(token2_ids))
+
+        bert_token1_masks.append(torch.LongTensor(token1_masks))
+        bert_token2_masks.append(torch.LongTensor(token2_masks))
+        
+        bert_token1_segments.append(torch.LongTensor(token1_segments))
+        bert_token2_segments.append(torch.LongTensor(token2_segments))
 
     labels = torch.from_numpy(np.array(labels))
 
@@ -121,6 +151,10 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
             "choice2": choice2s,
             "token1_ids": bert_token1_ids,
             "token2_ids": bert_token2_ids,
+            "token1_masks": bert_token1_masks,
+            "token2_masks": bert_token2_masks,
+            "token1_segments": bert_token1_segments,
+            "token2_segments": bert_token2_segments,
         },
         Y_dict={"labels": labels},
     )

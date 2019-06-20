@@ -2,7 +2,7 @@ import sys
 from functools import partial
 
 from modules.bert_module import BertLastCLSModule, BertModule
-from modules.copa_module import ChoiceModule
+from modules.copa_module import PreModule
 from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
 
@@ -36,56 +36,41 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     customize_metric_funcs = {}
 
-    loss_fn = partial(utils.ce_loss, f"{TASK_NAME}_pred_head")
-    output_fn = partial(utils.output, f"{TASK_NAME}_pred_head")
+    loss_fn = partial(utils.ce_loss_new, f"{TASK_NAME}_pred_head")
+    output_fn = partial(utils.output_new, f"{TASK_NAME}_pred_head")
 
     task = EmmentalTask(
         name=TASK_NAME,
         module_pool=nn.ModuleDict(
             {
+                f"{TASK_NAME}_pre_module": PreModule(2),
                 "bert_module": bert_module,
                 f"{TASK_NAME}_feature": BertLastCLSModule(
                     dropout_prob=last_hidden_dropout_prob
                 ),
-                "linear_module": nn.Linear(bert_output_dim, 1),
-                f"{TASK_NAME}_pred_head": ChoiceModule(task_cardinality),
+                f"{TASK_NAME}_pred_head": nn.Linear(bert_output_dim, 1),
             }
         ),
         task_flow=[
             {
-                "name": "choice0",
+                "name": f"{TASK_NAME}_pre",
+                "module": f"{TASK_NAME}_pre_module",
+                "inputs": [],
+            },
+            {
+                "name": f"{TASK_NAME}_bert_module",
                 "module": "bert_module",
-                "inputs": [("_input_", "token1_ids")],
+                "inputs": [(f"{TASK_NAME}_pre", 0), (f"{TASK_NAME}_pre", 1), (f"{TASK_NAME}_pre", 2)],
             },
             {
-                "name": "choice1",
-                "module": "bert_module",
-                "inputs": [("_input_", "token2_ids")],
-            },
-            {
-                "name": "choice0_bert_last_cls",
+                "name": f"{TASK_NAME}_feature",
                 "module": f"{TASK_NAME}_feature",
-                "inputs": [("choice0", 0)],
-            },
-            {
-                "name": "choice1_bert_last_cls",
-                "module": f"{TASK_NAME}_feature",
-                "inputs": [("choice1", 0)],
-            },
-            {
-                "name": "choice0rep",
-                "module": "linear_module",
-                "inputs": [("choice0_bert_last_cls", 0)],
-            },
-            {
-                "name": "choice1rep",
-                "module": "linear_module",
-                "inputs": [("choice1_bert_last_cls", 0)],
+                "inputs": [(f"{TASK_NAME}_bert_module", 0)],
             },
             {
                 "name": f"{TASK_NAME}_pred_head",
                 "module": f"{TASK_NAME}_pred_head",
-                "inputs": [],
+                "inputs": [(f"{TASK_NAME}_feature", 0)],
             },
         ],
         loss_func=loss_fn,

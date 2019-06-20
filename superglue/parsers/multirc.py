@@ -46,6 +46,7 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
     # labels
     labels = []
 
+    bert_tokens = []
     bert_token_ids = []
     bert_token_masks = []
     bert_token_segments = []
@@ -59,13 +60,25 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         # questions is a list of questions,
         # has fields (question, sentences_used, answers)
         pid = row["idx"]
-        para = re.sub(
-            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"].replace("<br>", " ")
-        )
-        para_token = tokenizer.tokenize(para)[: max_sequence_length - 2]
+        para = row["paragraph"]["text"]
+#        para = re.sub(
+#            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"].replace("<br>", " ")
+#        )
+
+#        para_token = tokenizer.tokenize(para)[: max_sequence_length - 2]
+        para_sent_list = re.sub("<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"]).split("<br>")
 
         for ques in row["paragraph"]["questions"]:
             qid = ques["idx"]
+            sent_used = ques["sentences_used"]
+            
+            if len(sent_used) > 0:
+                ques_para = " ".join([para_sent_list[i] for i in sent_used])
+            else:
+                ques_para = " ".join(para_sent_list)
+
+            para_token = tokenizer.tokenize(ques_para)[: max_sequence_length - 2]
+
             question = ques["question"]
             question_token = tokenizer.tokenize(question)[: max_sequence_length - 2]
 
@@ -107,6 +120,7 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
 
                 uids.append(f"{pid}%%{qid}%%{aid}")
 
+                bert_tokens.append(" ".join(tokens))
                 bert_token_ids.append(torch.LongTensor(token_ids))
                 bert_token_masks.append(torch.LongTensor(token_masks))
                 bert_token_segments.append(torch.LongTensor(token_segments))
@@ -126,6 +140,7 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
             "paras": paras,
             "questions": questions,
             "answers": answers,
+            "tokens": bert_tokens,
             "token_ids": bert_token_ids,
             "token_masks": bert_token_masks,
             "token_segments": bert_token_segments,

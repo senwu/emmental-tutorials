@@ -66,8 +66,8 @@ def build_model(bert_model_name, last_hidden_dropout_prob=None):
                 "module": f"{TASK_NAME}_pred_head",
                 "inputs": [
                     (f"{TASK_NAME}_bert_module", 0),
-                    ("_input_", "span1_idxs"),
-                    ("_input_", "span2_idxs"),
+                    ("_input_", "token1_idx"),
+                    ("_input_", "token2_idx"),
                     ("_input_", "token_masks"),
                 ],
             },

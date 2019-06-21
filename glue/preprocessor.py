@@ -93,12 +93,12 @@ def preprocessor(
         # Generate mask where 1 for real tokens and 0 for padding tokens
         token_masks = [1] * len(token_ids)
 
-        # Append padding
-        padding = [0] * (max_sequence_length - len(token_ids))
+#        # Append padding
+#        padding = [0] * (max_sequence_length - len(token_ids))
 
-        token_ids += padding
-        token_masks += padding
-        token_segments += padding
+#        token_ids += padding
+#        token_masks += padding
+#        token_segments += padding
 
         bert_token_ids.append(torch.LongTensor(token_ids))
         bert_token_masks.append(torch.LongTensor(token_masks))

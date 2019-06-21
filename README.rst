@@ -6,10 +6,20 @@ Introduction Tutorials
 
 We have several `introductory tutorials <intro/>`_ to help get you started with using Emmental.
 
+Chexnet
+-------
+
+In this `tutorial <chexnet/>`_, we build an Emmental application to predicted 14 common diagnoses using convolutional neural networks in over 100,000 NIH chest x-rays proposed from the `CheXNet paper`_.
+
 GLUE Tutorial
 -------------
 
 In this `tutorial <glue/>`_, we build an Emmental application to tackle the General Language Understanding Evaluation (GLUE) benchmark which is a collection of resources for training, evaluating, and analyzing natural language understanding systems.
+
+SuperGLUE Tutorial
+-------------
+
+In this `tutorial <superglue/>`_, we build an Emmental application to tackle the SuperGLUE, a new benchmark styled after GLUE with a new set of more difficult language understanding tasks, improved resources, which achieves the `start-of-the-art score`_ on SuperGLUE benchmark on June 15, 2019 undert the name of Stanford Hazy Research.
 
 
 Installation
@@ -56,3 +66,5 @@ After installing all the requirements, just run:
 
 
 .. _virtualenv: https://virtualenv.pypa.io/en/stable/
+.. _`CheXNet paper`: https://arxiv.org/pdf/1711.05225
+.. _`start-of-the-art score`: https://super.gluebenchmark.com/leaderboard

@@ -1,9 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.init as init
-from torchvision import models
-
 from emmental.modules.identity_module import IdentityModule
+from torchvision import models
 
 
 class TorchVisionEncoder(nn.Module):

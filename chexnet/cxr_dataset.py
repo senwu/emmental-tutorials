@@ -5,12 +5,11 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 import torch
+from cxr_preprocess import get_task_config
+from emmental.data import EmmentalDataLoader, EmmentalDataset
 from PIL import Image
 from torch.utils.data.sampler import Sampler, SubsetRandomSampler
 from tqdm import tqdm
-
-from cxr_preprocess import get_task_config
-from emmental.data import EmmentalDataLoader, EmmentalDataset
 
 
 class CXR8Dataset(EmmentalDataset):

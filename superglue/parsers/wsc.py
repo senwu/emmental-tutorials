@@ -122,17 +122,14 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         assert span2_char_index is not None, f"Check example {id} in {jsonl_path}"
 
         # Tokenize sentences
-        # print("sub1:", text[:min(span1_char_index[0], span2_char_index[0])])
         bert_tokens_sub1 = tokenizer.tokenize(
             text[: min(span1_char_index[0], span2_char_index[0])]
         )
-        # print(bert_tokens_sub1)
 
         if span1_char_index[0] < span2_char_index[0]:
             bert_tokens_sub2 = tokenizer.tokenize(
                 text[span1_char_index[0] : span1_char_index[1]]
             )
-            # print("sub2", text[span1_char_index[0]:span1_char_index[1]])
             token1_idx = [
                 len(bert_tokens_sub1) + 1,
                 len(bert_tokens_sub1) + len(bert_tokens_sub2),
@@ -141,12 +138,10 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
             bert_tokens_sub2 = tokenizer.tokenize(
                 text[span2_char_index[0] : span2_char_index[1]]
             )
-            # print("sub2", text[span2_char_index[0]:span2_char_index[1]])
             token2_idx = [
                 len(bert_tokens_sub1) + 1,
                 len(bert_tokens_sub1) + len(bert_tokens_sub2),
             ]
-        # print(bert_tokens_sub2)
 
         sub3_st = (
             span1_char_index[1]
@@ -160,13 +155,10 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         )
 
         bert_tokens_sub3 = tokenizer.tokenize(text[sub3_st:sub3_ed])
-        # print("sub3", text[sub3_st:sub3_ed])
-        # print(bert_tokens_sub3)
         if span1_char_index[0] < span2_char_index[0]:
             bert_tokens_sub4 = tokenizer.tokenize(
                 text[span2_char_index[0] : span2_char_index[1]]
             )
-            # print("sub4", text[span2_char_index[0]:span2_char_index[1]])
             cur_len = (
                 len(bert_tokens_sub1) + len(bert_tokens_sub2) + len(bert_tokens_sub3)
             )
@@ -175,22 +167,15 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
             bert_tokens_sub4 = tokenizer.tokenize(
                 text[span1_char_index[0] : span1_char_index[1]]
             )
-            # print("sub4", text[span1_char_index[0]:span1_char_index[1]])
             cur_len = (
                 len(bert_tokens_sub1) + len(bert_tokens_sub2) + len(bert_tokens_sub3)
             )
             token1_idx = [cur_len + 1, cur_len + len(bert_tokens_sub4)]
-        # print(bert_tokens_sub4)
 
         if span1_char_index[0] < span2_char_index[0]:
             bert_tokens_sub5 = tokenizer.tokenize(text[span2_char_index[1] :])
-            # print("sub5", text[span2_char_index[1]:])
         else:
             bert_tokens_sub5 = tokenizer.tokenize(text[span1_char_index[1] :])
-            # print("sub5", text[span1_char_index[1]:])
-        # print(bert_tokens_sub5)
-
-        # print(token1_idx, token2_idx)
 
         tokens = (
             ["[CLS]"]
@@ -211,7 +196,6 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         # Generate mask where 1 for real tokens and 0 for padding tokens
         token_masks = [1] * len(token_ids)
 
-        # if token1_idx is not None and token2_idx is not None:
         token1_idxs.append(token1_idx)
         token2_idxs.append(token2_idx)
 

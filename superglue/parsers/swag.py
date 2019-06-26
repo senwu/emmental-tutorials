@@ -1,13 +1,12 @@
 import json
 import logging
 import sys
-import pandas as pd
 
 import numpy as np
+import pandas as pd
 import torch
-from task_config import SuperGLUE_LABEL_MAPPING
-
 from emmental.data import EmmentalDataset
+from task_config import SuperGLUE_LABEL_MAPPING
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
@@ -62,7 +61,7 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
         choice2 = ex["ending1"]
         choice3 = ex["ending2"]
         choice4 = ex["ending3"]
-        
+
         label = ex["label"] if "label" in ex else 0
 
         uids.append(ex_idx)

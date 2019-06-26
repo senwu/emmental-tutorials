@@ -1,6 +1,6 @@
 import torch
-from torch import nn
 from allennlp.modules.span_extractors import SelfAttentiveSpanExtractor
+from torch import nn
 
 
 class SpanClassifierModule(nn.Module):

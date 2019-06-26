@@ -1,13 +1,12 @@
 import sys
 from functools import partial
 
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
 from modules.copa_module import PreModule
 from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
-
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 
 from . import utils
 
@@ -36,8 +35,8 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     customize_metric_funcs = {}
 
-    loss_fn = partial(utils.ce_loss_new, f"{TASK_NAME}_pred_head")
-    output_fn = partial(utils.output_new, f"{TASK_NAME}_pred_head")
+    loss_fn = partial(utils.ce_loss_copa, f"{TASK_NAME}_pred_head")
+    output_fn = partial(utils.output_copa, f"{TASK_NAME}_pred_head")
 
     task = EmmentalTask(
         name=TASK_NAME,
@@ -60,7 +59,11 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
             {
                 "name": f"{TASK_NAME}_bert_module",
                 "module": "bert_module",
-                "inputs": [(f"{TASK_NAME}_pre", 0), (f"{TASK_NAME}_pre", 1), (f"{TASK_NAME}_pre", 2)],
+                "inputs": [
+                    (f"{TASK_NAME}_pre", 0),
+                    (f"{TASK_NAME}_pre", 1),
+                    (f"{TASK_NAME}_pre", 2),
+                ],
             },
             {
                 "name": f"{TASK_NAME}_feature",

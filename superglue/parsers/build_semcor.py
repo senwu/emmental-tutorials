@@ -2,27 +2,28 @@
 Converts SemCor dataset from xml word-per-line to jsonl sentence pairs 
 """
 
-from collections import defaultdict, namedtuple
-from itertools import combinations
 import logging
 import random
 import sys
+from collections import defaultdict, namedtuple
+from itertools import combinations
 
 import jsonlines
 import numpy as np
 import torch
 import xmltodict
+from emmental.data import EmmentalDataset
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
-from emmental.data import EmmentalDataset
 
 logger = logging.getLogger(__name__)
 
 Candidate = namedtuple("Candidate", ["word", "pos", "sense", "sentence"])
 
+
 def parse(in_paths, out_path, max_per_word=5):
-    assert(out_path.endswith(".jsonl"))
+    assert out_path.endswith(".jsonl")
 
     # Files to sentences
     sentences = []
@@ -31,7 +32,7 @@ def parse(in_paths, out_path, max_per_word=5):
         logger.info(f"Loading data from {file_path}.")
         with open(file_path) as f:
             doc = xmltodict.parse(f.read())
-        for word in doc["SimpleWsdDoc"]["word"]:    
+        for word in doc["SimpleWsdDoc"]["word"]:
             if word["@break_level"] in ["SENTENCE_BREAK", "PARAGRAPH_BREAK"]:
                 sentences.append(sentence)
                 sentence = [word]
@@ -42,12 +43,14 @@ def parse(in_paths, out_path, max_per_word=5):
     # Sentences to groups
     sentence_groups = defaultdict(list)
     for sentence in sentences:
-        sentence_text = ' '.join([word["@text"] for word in sentence])
+        sentence_text = " ".join([word["@text"] for word in sentence])
         for word in sentence:
             if word.get("@sense"):
-                cand = Candidate(word["@text"], word["@pos"], word["@sense"], sentence_text)
+                cand = Candidate(
+                    word["@text"], word["@pos"], word["@sense"], sentence_text
+                )
                 sentence_groups[(word["@lemma"], word["@pos"])].append(cand)
-    
+
     # Groups to pairs
     idx = 0
     examples = []
@@ -68,18 +71,19 @@ def parse(in_paths, out_path, max_per_word=5):
             }
             examples.append(example)
             idx += 1
- 
+
     # Write to file
     labels = np.array([e["label"] for e in examples])
     print(f"Writing new examples to {out_path}")
     print(f"Total examples: {len(examples)}")
     print(f"Unique words: {len(set([e['word'] for e in examples]))}")
-    print(f"Class balance: {sum(labels == 1)}/{len(labels)} "
-                 f"({sum(labels == 1)/len(labels):.2f}) positives")
-    with jsonlines.open(out_path, mode='w') as writer:
-            writer.write_all(examples)
+    print(
+        f"Class balance: {sum(labels == 1)}/{len(labels)} "
+        f"({sum(labels == 1)/len(labels):.2f}) positives"
+    )
+    with jsonlines.open(out_path, mode="w") as writer:
+        writer.write_all(examples)
     return examples
-
 
 
 if __name__ == "__main__":

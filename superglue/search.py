@@ -15,8 +15,9 @@ import subprocess
 from itertools import cycle, product
 
 import numpy as np
+from run import get_parser
+from run import main as launch
 
-from run import get_parser, main as launch
 
 def config_generator(search_space, max_search, rng, shuffle=True):
     """Generates config dicts from the given search space
@@ -116,7 +117,9 @@ def main(args):
     search_space = search_config["search_space"]
     fixed_args = search_config["fixed_args"]
 
-    configs = config_generator(search_space, args.max_search, random.Random(args.search_seed), True)
+    configs = config_generator(
+        search_space, args.max_search, random.Random(args.search_seed), True
+    )
 
     config_to_metrics = {}
     for search_conf in configs:
@@ -165,7 +168,10 @@ if __name__ == "__main__":
         "--device", type=str, help="Device to train on. See trainer kwargs for more."
     )
     parser.add_argument(
-        "--search_seed", type=int, help="Seed for random search. Separate from run.py seed, specified in config", default=123
+        "--search_seed",
+        type=int,
+        help="Seed for random search. Separate from run.py seed, specified in config",
+        default=123,
     )
     args = parser.parse_args()
     main(args)

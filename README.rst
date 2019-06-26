@@ -49,20 +49,11 @@ environment. To deactivate the environment, simply run:
     deactivate
 
 
-Then, install Fonduer and any other python dependencies by running:
+Then, install Emmental and any other python dependencies by running:
 
 .. code:: bash
 
     pip install -r requirements.txt
-
-Running
-~~~~~~~
-
-After installing all the requirements, just run:
-
-.. code:: bash
-
-    jupyter notebook
 
 
 .. _virtualenv: https://virtualenv.pypa.io/en/stable/

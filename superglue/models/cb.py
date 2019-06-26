@@ -1,14 +1,13 @@
 import sys
 from functools import partial
 
+from emmental.metrics.accuracy import accuracy_scorer
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
 from sklearn.metrics import f1_score
 from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
-
-from emmental.metrics.accuracy import accuracy_scorer
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 
 from . import utils
 

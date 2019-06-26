@@ -4,9 +4,8 @@ import sys
 
 import numpy as np
 import torch
-from task_config import SuperGLUE_LABEL_MAPPING
-
 from emmental.data import EmmentalDataset
+from task_config import SuperGLUE_LABEL_MAPPING
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 

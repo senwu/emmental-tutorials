@@ -4,9 +4,8 @@ import sys
 
 import numpy as np
 import torch
-from task_config import SuperGLUE_LABEL_MAPPING
-
 from emmental.data import EmmentalDataset
+from task_config import SuperGLUE_LABEL_MAPPING
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
@@ -132,7 +131,7 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
 
         bert_token1_masks.append(torch.LongTensor(token1_masks))
         bert_token2_masks.append(torch.LongTensor(token2_masks))
-        
+
         bert_token1_segments.append(torch.LongTensor(token1_segments))
         bert_token2_segments.append(torch.LongTensor(token2_segments))
 

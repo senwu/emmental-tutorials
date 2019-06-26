@@ -1,12 +1,11 @@
 import logging
 import os
 
-from task_config import SuperGLUE_TASK_SPLIT_MAPPING
-from tokenizer import get_tokenizer
-
+import augmentation
 import parsers
 from emmental.data import EmmentalDataLoader
-import augmentation
+from task_config import SuperGLUE_TASK_SPLIT_MAPPING
+from tokenizer import get_tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -36,15 +35,19 @@ def get_dataloaders(
             jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length
         )
         dataloader = EmmentalDataLoader(
-                task_to_label_dict={task_name: "labels"},
-                dataset=dataset,
-                split=split,
-                batch_size=batch_size,
-                shuffle=(split == "train"),
-            )
+            task_to_label_dict={task_name: "labels"},
+            dataset=dataset,
+            split=split,
+            batch_size=batch_size,
+            shuffle=(split == "train"),
+        )
         dataloaders.append(dataloader)
 
-        if augment and split=="train" and task_name in augmentation.augmentation_funcs:
+        if (
+            augment
+            and split == "train"
+            and task_name in augmentation.augmentation_funcs
+        ):
             augmentation_funcs = augmentation.augmentation_funcs[task_name]
             for af in augmentation_funcs:
                 dataset = af(dataset)
@@ -54,9 +57,9 @@ def get_dataloaders(
                     split=split,
                     batch_size=batch_size,
                     shuffle=(split == "train"),
-                )            
+                )
                 dataloaders.append(dataloader)
-            
+
         logger.info(f"Loaded {split} for {task_name} with {len(dataset)} samples.")
 
     return dataloaders

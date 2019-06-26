@@ -4,10 +4,6 @@ import os
 import sys
 from functools import partial
 
-sys.path.append('/dfs/scratch0/paroma/emmental/')
-sys.path.append('/dfs/scratch0/paroma/emmental/src/')
-sys.path.append('../')
-sys.path.append('/dfs/scratch0/paroma/emmental/src/emmental/')
 import emmental
 import models
 import slicing
@@ -16,8 +12,8 @@ from emmental import Meta
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_arg import parse_arg, parse_arg_to_config, str2bool
-from utils import str2list, write_to_file
 from submit import make_submission_file
+from utils import str2list, write_to_file
 
 logger = logging.getLogger(__name__)
 
@@ -61,10 +57,22 @@ def add_application_args(parser):
     )
 
     parser.add_argument("--batch_size", type=int, default=16, help="batch size")
-    parser.add_argument("--slices", type=str2bool, default=False, help="Whether to include slices")
-    parser.add_argument("--general_slices", type=str2bool, default=False, help="Whether to include general slices")
+    parser.add_argument(
+        "--slices", type=str2bool, default=False, help="Whether to include slices"
+    )
+    parser.add_argument(
+        "--general_slices",
+        type=str2bool,
+        default=False,
+        help="Whether to include general slices",
+    )
 
-    parser.add_argument("--augmentations", type=str2bool, default=False, help="Whether to include augmentations")
+    parser.add_argument(
+        "--augmentations",
+        type=str2bool,
+        default=False,
+        help="Whether to include augmentations",
+    )
 
     parser.add_argument(
         "--slice_hidden_dim", type=int, default=1024, help="Slice hidden dimension size"
@@ -79,7 +87,10 @@ def add_application_args(parser):
     )
 
     parser.add_argument(
-        "--last_hidden_dropout_prob", type=float, default=0.0, help="Dropout on last layer of bert."
+        "--last_hidden_dropout_prob",
+        type=float,
+        default=0.0,
+        help="Dropout on last layer of bert.",
     )
 
     parser.add_argument(
@@ -136,8 +147,7 @@ def main(args):
             augment=args.augmentations,
         )
         task = models.model[task_name](
-            args.bert_model, 
-            last_hidden_dropout_prob=args.last_hidden_dropout_prob
+            args.bert_model, last_hidden_dropout_prob=args.last_hidden_dropout_prob
         )
         if args.slices:
             logger.info("Initializing task-specific slices")
@@ -147,9 +157,13 @@ def main(args):
                 logger.info("Including general slices")
                 slice_func_dict.update(slicing.slice_func_dict["general"])
 
-            task_dataloaders = slicing.add_slice_labels(task_name, task_dataloaders, slice_func_dict)
+            task_dataloaders = slicing.add_slice_labels(
+                task_name, task_dataloaders, slice_func_dict
+            )
 
-            slice_tasks = slicing.add_slice_tasks(task_name, task, slice_func_dict, args.slice_hidden_dim)
+            slice_tasks = slicing.add_slice_tasks(
+                task_name, task, slice_func_dict, args.slice_hidden_dim
+            )
             tasks.extend(slice_tasks)
         else:
             tasks.append(task)
@@ -170,7 +184,7 @@ def main(args):
 
     # If model is slice-aware, slice scores will be calculated from slice heads
     # If model is not slice-aware, manually calculate performance on slices
-    if not args.slices: 
+    if not args.slices:
         slice_func_dict = {}
         slice_keys = args.task
         if args.general_slices:
@@ -202,7 +216,7 @@ def main(args):
     # Save submission file
     for task_name in args.task:
         dataloaders = [d for d in dataloaders if d.split == "test"]
-        assert(len(dataloaders) == 1)
+        assert len(dataloaders) == 1
         filepath = os.path.join(Meta.log_path, f"{task_name}.jsonl")
         make_submission_file(model, dataloaders[0], task_name, filepath)
 
@@ -210,5 +224,4 @@ def main(args):
 if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
-    main(args) 
-    
+    main(args)

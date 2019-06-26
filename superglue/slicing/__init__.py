@@ -2,17 +2,22 @@ import logging
 import sys
 from functools import partial
 
-import torch
-from torch import nn
-from emmental.scorer import Scorer
-
 from emmental import Meta
+from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 from models import utils
+from torch import nn
 
-from . import master_module
-
-from . import general_sfs, CB_sfs, WiC_sfs, RTE_sfs, COPA_sfs, MultiRC_sfs, WSC_sfs
+from . import (
+    CB_sfs,
+    COPA_sfs,
+    MultiRC_sfs,
+    RTE_sfs,
+    WiC_sfs,
+    WSC_sfs,
+    general_sfs,
+    master_module,
+)
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
@@ -118,8 +123,12 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
             name=f"{task_name}_slice_{type}_{slice_name}",
             module_pool=slice_ind_module_pool,
             task_flow=slice_ind_task_flow,
-            loss_func=partial(utils.ce_loss, f"{task_name}_slice_{type}_{slice_name}_head"),
-            output_func=partial(utils.output, f"{task_name}_slice_{type}_{slice_name}_head"),
+            loss_func=partial(
+                utils.ce_loss, f"{task_name}_slice_{type}_{slice_name}_head"
+            ),
+            output_func=partial(
+                utils.output, f"{task_name}_slice_{type}_{slice_name}_head"
+            ),
             scorer=Scorer(metrics=["f1", "accuracy"]),
         )
         tasks.append(task)
@@ -153,8 +162,12 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
             name=f"{task_name}_slice_{type}_{slice_name}",
             module_pool=slice_pred_module_pool,
             task_flow=slice_pred_task_flow,
-            loss_func=partial(utils.ce_loss, f"{task_name}_slice_{type}_{slice_name}_head"),
-            output_func=partial(utils.output, f"{task_name}_slice_{type}_{slice_name}_head"),
+            loss_func=partial(
+                utils.ce_loss, f"{task_name}_slice_{type}_{slice_name}_head"
+            ),
+            output_func=partial(
+                utils.output, f"{task_name}_slice_{type}_{slice_name}_head"
+            ),
             scorer=base_scorer,
         )
         tasks.append(task)
@@ -210,13 +223,15 @@ def score_slices(model, dataloaders, task_names, slice_func_dict):
                 logging.info(f"Evaluating slice {slice_name}")
                 inds, _ = slice_func(dataloader.dataset)
                 mask = (inds == 1).numpy().astype(bool)
-                slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])    
+                slice_scores = scorer.score(golds[mask], probs[mask], preds[mask])
                 for metric_name, metric_value in slice_scores.items():
                     identifier = "/".join(
-                        [f"{task_name}:{slice_name}", 
-                        dataloader.data_name,
-                        dataloader.split, 
-                        metric_name]
+                        [
+                            f"{task_name}:{slice_name}",
+                            dataloader.data_name,
+                            dataloader.split,
+                            metric_name,
+                        ]
                     )
-                    scores[identifier] = metric_value            
+                    scores[identifier] = metric_value
     return scores

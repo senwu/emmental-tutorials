@@ -5,9 +5,8 @@ import sys
 
 import numpy as np
 import torch
-from task_config import SuperGLUE_LABEL_MAPPING
-
 from emmental.data import EmmentalDataset
+from task_config import SuperGLUE_LABEL_MAPPING
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 
@@ -61,17 +60,19 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         # has fields (question, sentences_used, answers)
         pid = row["idx"]
         para = row["paragraph"]["text"]
-#        para = re.sub(
-#            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"].replace("<br>", " ")
-#        )
+        #        para = re.sub(
+        #            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"].replace("<br>", " ")
+        #        )
 
-#        para_token = tokenizer.tokenize(para)[: max_sequence_length - 2]
-        para_sent_list = re.sub("<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"]).split("<br>")
+        #        para_token = tokenizer.tokenize(para)[: max_sequence_length - 2]
+        para_sent_list = re.sub(
+            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"]
+        ).split("<br>")
 
         for ques in row["paragraph"]["questions"]:
             qid = ques["idx"]
             sent_used = ques["sentences_used"]
-            
+
             if len(sent_used) > 0:
                 ques_para = " ".join([para_sent_list[i] for i in sent_used])
             else:

@@ -19,9 +19,6 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
     logger.info(f"Loading data from {csv_path}.")
     rows = pd.read_csv(csv_path)
 
-    # for i in range(2):
-    #     logger.info(f"Sample {i}: {rows[i]}")
-
     # Truncate to max_data_samples
     if max_data_samples:
         rows = rows[:max_data_samples]
@@ -48,6 +45,16 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
     bert_token2_ids = []
     bert_token3_ids = []
     bert_token4_ids = []
+
+    bert_token1_masks = []
+    bert_token2_masks = []
+    bert_token3_masks = []
+    bert_token4_masks = []
+
+    bert_token1_segments = []
+    bert_token2_segments = []
+    bert_token3_segments = []
+    bert_token4_segments = []
 
     # Check the maximum token length
     max_len = -1
@@ -82,7 +89,7 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
         choice4_tokens = tokenizer.tokenize(choice4)
 
         # Convert to BERT manner
-        bert_token1 = (
+        token1 = (
             ["[CLS]"]
             + sent1_tokens
             + ["[SEP]"]
@@ -90,7 +97,7 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             + choice1_tokens
             + ["[SEP]"]
         )
-        bert_token2 = (
+        token2 = (
             ["[CLS]"]
             + sent1_tokens
             + ["[SEP]"]
@@ -98,7 +105,7 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             + choice2_tokens
             + ["[SEP]"]
         )
-        bert_token3 = (
+        token3 = (
             ["[CLS]"]
             + sent1_tokens
             + ["[SEP]"]
@@ -106,7 +113,7 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             + choice3_tokens
             + ["[SEP]"]
         )
-        bert_token4 = (
+        token4 = (
             ["[CLS]"]
             + sent1_tokens
             + ["[SEP]"]
@@ -115,10 +122,20 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             + ["[SEP]"]
         )
 
-        token1_ids = tokenizer.convert_tokens_to_ids(bert_token1)
-        token2_ids = tokenizer.convert_tokens_to_ids(bert_token2)
-        token3_ids = tokenizer.convert_tokens_to_ids(bert_token3)
-        token4_ids = tokenizer.convert_tokens_to_ids(bert_token4)
+        token1_ids = tokenizer.convert_tokens_to_ids(token1)
+        token2_ids = tokenizer.convert_tokens_to_ids(token2)
+        token3_ids = tokenizer.convert_tokens_to_ids(token3)
+        token4_ids = tokenizer.convert_tokens_to_ids(token4)
+
+        token1_masks = [1] * len(token1_ids)
+        token2_masks = [1] * len(token2_ids)
+        token3_masks = [1] * len(token3_ids)
+        token4_masks = [1] * len(token4_ids)
+
+        token1_segments = [0] * len(token1_ids)
+        token2_segments = [0] * len(token2_ids)
+        token3_segments = [0] * len(token3_ids)
+        token4_segments = [0] * len(token4_ids)
 
         if len(token1_ids) > max_len:
             max_len = len(token1_ids)
@@ -134,6 +151,16 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
         bert_token3_ids.append(torch.LongTensor(token3_ids))
         bert_token4_ids.append(torch.LongTensor(token4_ids))
 
+        bert_token1_masks.append(torch.LongTensor(token1_masks))
+        bert_token2_masks.append(torch.LongTensor(token2_masks))
+        bert_token3_masks.append(torch.LongTensor(token3_masks))
+        bert_token4_masks.append(torch.LongTensor(token4_masks))
+
+        bert_token1_segments.append(torch.LongTensor(token1_segments))
+        bert_token2_segments.append(torch.LongTensor(token2_segments))
+        bert_token3_segments.append(torch.LongTensor(token3_segments))
+        bert_token4_segments.append(torch.LongTensor(token4_segments))
+
     labels = torch.from_numpy(np.array(labels))
 
     logger.info(f"Max token len {max_len}")
@@ -143,8 +170,8 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
         uid="uids",
         X_dict={
             "uids": uids,
-            "sent1": sent1s,
-            "sent2": sent2s,
+            "sentence1": sent1s,
+            "sentence2": sent2s,
             "choice1": choice1s,
             "choice2": choice2s,
             "choice3": choice3s,
@@ -153,6 +180,14 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             "token2_ids": bert_token2_ids,
             "token3_ids": bert_token3_ids,
             "token4_ids": bert_token4_ids,
+            "token1_masks": bert_token1_masks,
+            "token2_masks": bert_token2_masks,
+            "token3_masks": bert_token3_masks,
+            "token4_masks": bert_token4_masks,
+            "token1_segments": bert_token1_segments,
+            "token2_segments": bert_token2_segments,
+            "token3_segments": bert_token3_segments,
+            "token4_segments": bert_token4_segments,
         },
         Y_dict={"labels": labels},
     )

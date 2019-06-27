@@ -19,7 +19,7 @@ In this `tutorial <glue/>`_, we build an Emmental application to tackle the Gene
 SuperGLUE Tutorial
 -------------
 
-In this `tutorial <superglue/>`_, we build an Emmental application to tackle the SuperGLUE, a new benchmark styled after GLUE with a new set of more difficult language understanding tasks, improved resources, which achieves the `start-of-the-art score`_ on SuperGLUE benchmark on June 15, 2019 undert the name of Stanford Hazy Research.
+In this `tutorial <superglue/>`_, we build an Emmental application to tackle the SuperGLUE, a new benchmark styled after GLUE with a new set of more difficult language understanding tasks, improved resources, which achieves the `start-of-the-art score`_ on SuperGLUE benchmark on June 15, 2019 under the name of Stanford Hazy Research.
 
 
 Installation

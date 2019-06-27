@@ -1,4 +1,1 @@
-emmental==0.0.1
-jsonlines
-jupyter
-pytorch_pretrained_bert
+emmental==0.0.3

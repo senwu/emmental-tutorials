@@ -1,4 +1,4 @@
-from . import cb, copa, multirc, rte, semcor, wic, wsc
+from . import cb, copa, multirc, rte, semcor, swag, wic, wsc
 
 model = {
     "MultiRC": multirc.build_model,

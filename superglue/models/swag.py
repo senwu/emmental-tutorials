@@ -30,14 +30,20 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     customize_metric_funcs = {}
 
-    loss_fn = partial(utils.ce_loss_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES)
-    output_fn = partial(utils.output_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES)
+    loss_fn = partial(
+        utils.ce_loss_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES
+    )
+    output_fn = partial(
+        utils.output_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES
+    )
 
     task = EmmentalTask(
         name=TASK_NAME,
         module_pool=nn.ModuleDict(
             {
-                f"{TASK_NAME}_multiple_choice_module": MultipleChoiceModule(NUM_CHOICES),
+                f"{TASK_NAME}_multiple_choice_module": MultipleChoiceModule(
+                    NUM_CHOICES
+                ),
                 "bert_module": bert_module,
                 f"{TASK_NAME}_feature": BertLastCLSModule(
                     dropout_prob=last_hidden_dropout_prob

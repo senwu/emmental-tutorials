@@ -28,6 +28,12 @@ To use this tutorial you will need to:
 
   bash run_superglue.sh [TASK] [SUPERGLUEDATA] [SEED] [GPU_ID]
 
+Acknowledgements
+----------------
+
+Much of the code in this tutorial was adapted from the jiant_. We thank all authors to provide these available online.
 
 .. _Emmental: https://github.com/SenWu/emmental
+.. _jiant: https://github.com/jsalt18-sentence-repl/jiant
+
 

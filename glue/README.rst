@@ -17,7 +17,7 @@ To use this tutorial you will need to:
 
   python download_glue_data.py -d [GLUEDATA]
 
-2. Run the GLUE task with the following command, where `TASK` is task name list delimited by ",", any combination from `CoLA,MNLI,MRPC,QNLI,QQP,RTE,SST-2,STS-B,WNLI`.
+2. Run the GLUE task with the following command, where `TASK` is task name list delimited by ",", any combination from `CoLA`, `MNLI`, `MRPC`, `QNLI`, `QQP`, `RTE`, `SST-2`, `STS-B`, `WNLI`.
 
 .. code:: bash
 

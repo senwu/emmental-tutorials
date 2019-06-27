@@ -72,7 +72,7 @@ elif [ ${TASK} == "copa" ]; then
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
         --batch_size 4 \
-        --max_sequence_length 256 \
+        --max_sequence_length 40 \
         --dataparallel 0
 elif [ ${TASK} == "multirc" ]; then
     python run.py \

@@ -154,7 +154,7 @@ def make_submission_file(model, dataloader, task_name, filepath):
 @click.option("--WSC", help="Path to WSC model")
 @click.option("--split", default="test", type=click.Choice(["train", "val", "test"]))
 @click.option("--batch_size", default=4, type=int)
-@click.option("--data_dir", default=os.environ["SUPERGLUEDATA"])
+@click.option("--data_dir", help="Path to data")
 @click.option("--submit_dir", default=f"submissions")
 @click.argument("name")
 def make_submission(

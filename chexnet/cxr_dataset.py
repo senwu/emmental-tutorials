@@ -1,15 +1,10 @@
 import os
-import pathlib
-from collections import defaultdict
 
 import numpy as np
 import pandas as pd
 import torch
-from cxr_preprocess import get_task_config
-from emmental.data import EmmentalDataLoader, EmmentalDataset
+from emmental.data import EmmentalDataset
 from PIL import Image
-from torch.utils.data.sampler import Sampler, SubsetRandomSampler
-from tqdm import tqdm
 
 
 class CXR8Dataset(EmmentalDataset):
@@ -46,14 +41,14 @@ class CXR8Dataset(EmmentalDataset):
 
         if (
             not finding == "any"
-        ):  # can filter for positive findings of the kind described; useful for evaluation
+        ):  # can filter for positive findings of the kind described; for evaluation
             if finding in self.df.columns:
                 if len(self.df[self.df[finding] == 1]) > 0:
                     self.df = self.df[self.df[finding] == 1]
                 else:
                     print(
                         "No positive cases exist for "
-                        + LABEL
+                        + finding
                         + ", returning all unfiltered cases"
                     )
             else:

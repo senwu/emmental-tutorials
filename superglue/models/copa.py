@@ -5,7 +5,7 @@ from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
 from modules.copa_module import PreModule
-from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
+from task_config import SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
 
 from . import utils
@@ -20,12 +20,6 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024
-
-    task_cardinality = (
-        len(SuperGLUE_LABEL_MAPPING[TASK_NAME].keys())
-        if SuperGLUE_LABEL_MAPPING[TASK_NAME] is not None
-        else 1
-    )
 
     metrics = (
         SuperGLUE_TASK_METRIC_MAPPING[TASK_NAME]

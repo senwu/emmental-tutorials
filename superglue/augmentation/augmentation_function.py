@@ -1,11 +1,8 @@
 import logging
 from collections import defaultdict
 from functools import wraps
-from types import SimpleNamespace
 
-import numpy as np
-import torch
-from emmental.data import EmmentalDataset, emmental_collate_fn
+from emmental.data import EmmentalDataset
 from emmental.utils.utils import list_to_tensor
 
 logger = logging.getLogger(__name__)
@@ -16,9 +13,10 @@ IGNORE_INDEX = 0
 
 class augmentation_function:
     """
-    When wrapped with this decorator, augmentation functions only need to accept a 
+    When wrapped with this decorator, augmentation functions only need to accept a
     single (x_dict, y_dict) and return a new (x_dict, y_dict).
-    If no new example should be made from this example, the AF should return (None, None).
+    If no new example should be made from this example, the AF should
+    return (None, None).
     """
 
     # def __init__(self, name):

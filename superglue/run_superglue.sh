@@ -30,7 +30,7 @@ if [ ${TASK} == "cb" ]; then
     python run.py \
         --task CB \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 10 \
@@ -42,7 +42,8 @@ if [ ${TASK} == "cb" ]; then
         --warmup_percentage 0.0 \
         --counter_unit epochs \
         --evaluation_freq 0.1 \
-        --checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
+        --checkpointing 1 \
+	--checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
         --batch_size 4 \
@@ -52,7 +53,7 @@ elif [ ${TASK} == "copa" ]; then
     python run.py \
         --task COPA \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 10 \
@@ -66,6 +67,7 @@ elif [ ${TASK} == "copa" ]; then
         --counter_unit epoch \
         --evaluation_freq 1 \
         --checkpoint_freq 1 \
+	--checkpointing 1 \
         --checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
@@ -76,7 +78,7 @@ elif [ ${TASK} == "multirc" ]; then
     python run.py \
         --task MultiRC \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 10 \
@@ -90,6 +92,7 @@ elif [ ${TASK} == "multirc" ]; then
         --counter_unit batch \
         --evaluation_freq 1000 \
         --checkpoint_freq 1 \
+	--checkpointing 1 \
         --checkpoint_metric MultiRC/SuperGLUE/val/em_f1:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
@@ -100,16 +103,20 @@ elif [ ${TASK} == "rte" ]; then
     python run.py \
         --task RTE \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 50 \
-        --optimizer adamax \
+        --train_split train \
+        --valid_split val \
+	--optimizer adamax \
         --lr 2e-5 \
         --grad_clip 1.0 \
         --warmup_percentage 0.1 \
         --counter_unit epoch \
         --evaluation_freq 0.25 \
+	--checkpoint_freq 1 \
+	--checkpointing 1 \
         --checkpoint_metric RTE/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --checkpoint_runway 1.0 \
@@ -123,17 +130,20 @@ elif [ ${TASK} == "wic" ]; then
     python run.py \
         --task WiC \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 20 \
-        --optimizer adam \
+        --train_split train \
+	--valid_split val \
+	--optimizer adam \
         --lr 1e-5 \
         --grad_clip 5.0 \
         --warmup_percentage 0.0 \
-        --counter_unit epochs \
+        --counter_unit epoch \
         --evaluation_freq 0.1 \
         --checkpoint_freq 1 \
+	--checkpointing 1 \
         --checkpoint_metric WiC/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
@@ -144,7 +154,7 @@ elif [ ${TASK} == "wsc" ]; then
     python run.py \
         --task WSC \
         --data_dir ${SUPERGLUEDATA} \
-        --log_path ${LOG_PATH} \
+        --log_path ${LOGPATH} \
         --seed ${SEED} \
         --device ${GPU} \
         --n_epochs 20 \
@@ -158,6 +168,7 @@ elif [ ${TASK} == "wsc" ]; then
         --counter_unit epoch \
         --evaluation_freq 1 \
         --checkpoint_freq 1 \
+	--checkpointing 1 \
         --checkpoint_metric WSC/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \

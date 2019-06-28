@@ -164,7 +164,8 @@ if __name__ == "__main__":
     logger.info(f"Metrics: {scores}")
     write_to_file("metrics.txt", scores)
     logger.info(
-        f"Best metrics: {emmental_learner.logging_manager.checkpointer.best_metric_dict}"
+        f"Best metrics: "
+        f"{emmental_learner.logging_manager.checkpointer.best_metric_dict}"
     )
     write_to_file(
         "best_metrics.txt",

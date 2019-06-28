@@ -60,11 +60,6 @@ def parse(jsonl_path, tokenizer, uid, max_data_samples, max_sequence_length):
         # has fields (question, sentences_used, answers)
         pid = row["idx"]
         para = row["paragraph"]["text"]
-        #        para = re.sub(
-        #            "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"].replace("<br>", " ")
-        #        )
-
-        #        para_token = tokenizer.tokenize(para)[: max_sequence_length - 2]
         para_sent_list = re.sub(
             "<b>Sent .{1,2}: </b>", "", row["paragraph"]["text"]
         ).split("<br>")

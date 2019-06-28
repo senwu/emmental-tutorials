@@ -16,17 +16,16 @@ To use this tutorial you will need to:
 
   pip install -r requirements.txt
 
-2. Download the SuperGLUE data to the local directory.
+2. Download the SuperGLUE and other datasets (e.g., SWAG_) used in the tutorial to the local directory.
 
-.. code:: python
+.. code:: bash
+  bash download_data.sh [DATA]
 
-  python download_superglue_data.py -d [SUPERGLUEDATA]
-
-3. Run the SuperGLUE task with the following command, where `TASK` is one of `cb`, `copa`, `multirc`, `rte`, `wic`, `wsc`.
+3. Run the SuperGLUE task with the following command, where `TASK` is one of `cb`, `copa`, `multirc`, `rte`, `wic`, `wsc` and external task for pretraining (e.g., `swag`).
 
 .. code:: bash 
 
-  bash run_superglue.sh [TASK] [SUPERGLUEDATA] [SEED] [GPU_ID]
+  bash run_superglue.sh [TASK] [DATA] [SEED] [GPU_ID]
   
 Note that due to small validation sets and evidence of overfitting to the validation set on some of the tasks (CB, COPA, and WiC), we also recommend using cross-validation on these tasks. For each, we ran k-fold cross-validation with a value of k that would result in a validation set of approximately the same size as the original provided split.
 
@@ -37,5 +36,5 @@ Much of the code in this tutorial was adapted from the jiant_. We thank all auth
 
 .. _Emmental: https://github.com/SenWu/emmental
 .. _jiant: https://github.com/jsalt18-sentence-repl/jiant
-
+.. _SWAG: https://github.com/rowanz/swagaf
 

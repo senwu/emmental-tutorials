@@ -1,5 +1,5 @@
 """
-Converts SemCor dataset from xml word-per-line to jsonl sentence pairs 
+Converts SemCor dataset from xml word-per-line to jsonl sentence pairs
 """
 
 import logging
@@ -10,9 +10,7 @@ from itertools import combinations
 
 import jsonlines
 import numpy as np
-import torch
 import xmltodict
-from emmental.data import EmmentalDataset
 
 sys.path.append("..")  # Adds higher directory to python modules path.
 

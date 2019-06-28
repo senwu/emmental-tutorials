@@ -4,8 +4,8 @@ from functools import partial
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
-from modules.copa_module import PreModule
-from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
+from modules.multiple_choice_module import MultipleChoiceModule
+from task_config import SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
 
 from . import utils
@@ -14,18 +14,13 @@ sys.path.append("..")  # Adds higher directory to python modules path.
 
 
 TASK_NAME = "COPA"
+NUM_CHOICES = 2
 
 
 def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     bert_module = BertModule(bert_model_name)
     bert_output_dim = 768 if "base" in bert_model_name else 1024
-
-    task_cardinality = (
-        len(SuperGLUE_LABEL_MAPPING[TASK_NAME].keys())
-        if SuperGLUE_LABEL_MAPPING[TASK_NAME] is not None
-        else 1
-    )
 
     metrics = (
         SuperGLUE_TASK_METRIC_MAPPING[TASK_NAME]
@@ -35,14 +30,20 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
 
     customize_metric_funcs = {}
 
-    loss_fn = partial(utils.ce_loss_copa, f"{TASK_NAME}_pred_head")
-    output_fn = partial(utils.output_copa, f"{TASK_NAME}_pred_head")
+    loss_fn = partial(
+        utils.ce_loss_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES
+    )
+    output_fn = partial(
+        utils.output_multiple_choice, f"{TASK_NAME}_pred_head", NUM_CHOICES
+    )
 
     task = EmmentalTask(
         name=TASK_NAME,
         module_pool=nn.ModuleDict(
             {
-                f"{TASK_NAME}_pre_module": PreModule(2),
+                f"{TASK_NAME}_multiple_choice_module": MultipleChoiceModule(
+                    NUM_CHOICES
+                ),
                 "bert_module": bert_module,
                 f"{TASK_NAME}_feature": BertLastCLSModule(
                     dropout_prob=last_hidden_dropout_prob
@@ -52,17 +53,17 @@ def build_model(bert_model_name, last_hidden_dropout_prob=0.0):
         ),
         task_flow=[
             {
-                "name": f"{TASK_NAME}_pre",
-                "module": f"{TASK_NAME}_pre_module",
+                "name": f"{TASK_NAME}_multiple_choice_module",
+                "module": f"{TASK_NAME}_multiple_choice_module",
                 "inputs": [],
             },
             {
                 "name": f"{TASK_NAME}_bert_module",
                 "module": "bert_module",
                 "inputs": [
-                    (f"{TASK_NAME}_pre", 0),
-                    (f"{TASK_NAME}_pre", 1),
-                    (f"{TASK_NAME}_pre", 2),
+                    (f"{TASK_NAME}_multiple_choice_module", 0),
+                    (f"{TASK_NAME}_multiple_choice_module", 1),
+                    (f"{TASK_NAME}_multiple_choice_module", 2),
                 ],
             },
             {

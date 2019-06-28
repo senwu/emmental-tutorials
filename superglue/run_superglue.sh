@@ -1,7 +1,8 @@
 #!/bin/bash
 # This script is for running our SuperGLUE approach.
 # Usage: bash run_superglue.sh ${TASK} ${SUPERGLUEDATA} ${SEED} ${GPU_ID}
-#   - TASK: one of {"cb", "copa", "multirc", "rte", "wic", "wsc"}
+#   - TASK: one of {"cb", "copa", "multirc", "rte", "wic", "wsc", "swag"}
+#       Note: swag is an external task used for copa pretraining
 #   - SUPERGLUEDATA: SuperGLUE data directory. Defaults to "data".
 #   - LOGPATH: log directory. Defaults to "logs".
 #   - SEED: random seed. Defaults to 111.
@@ -175,4 +176,30 @@ elif [ ${TASK} == "wsc" ]; then
         --batch_size 4 \
         --max_sequence_length 256 \
         --dataparallel 0
+elif [ ${TASK} == "swag" ]; then
+    python run.py \
+        --task SWAG \
+        --data_dir ${SUPERGLUEDATA} \
+        --log_path ${LOGPATH} \
+        --seed ${SEED} \
+        --device ${GPU} \
+        --n_epochs 5 \
+        --train_split train \
+        --valid_split val \
+        --optimizer adamax \
+        --lr 1e-5 \
+        --eps 1e-8 \
+        --grad_clip 5.0 \
+        --warmup_percentage 0.0 \
+        --counter_unit epoch \
+        --evaluation_freq 0.1 \
+        --checkpoint_freq 1 \
+        --checkpointing 1 \
+        --checkpoint_metric SWAG/SuperGLUE/val/accuracy:max \
+        --checkpoint_task_metrics model/train/all/loss:min \
+        --bert_model bert-large-cased \
+        --batch_size 3 \
+        --max_sequence_length 256 \
+        --dataparallel 0 \
+        --last_hidden_dropout_prob 0.1
 fi

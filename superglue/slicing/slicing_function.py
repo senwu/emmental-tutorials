@@ -15,7 +15,7 @@ class slicing_function:
     """
     When wrapped with this decorator, slicing functions only need to return an indicator
     for whether an individual example (bundle of attributes) belongs in that slice.
-    Iterating through the dataset, making the pred array (and masking), etc. are all 
+    Iterating through the dataset, making the pred array (and masking), etc. are all
     handled automatically.
     """
 

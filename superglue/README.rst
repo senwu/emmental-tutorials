@@ -3,7 +3,7 @@ SuperGLUE
 
 In this advanced tutorial, we will build an Emmental_ application to tackle the
 SuperGLUE, a new benchmark styled after GLUE with a new set of more difficult
-language understanding tasks, improved resources.
+language understanding tasks.
 
 Installation
 ------------
@@ -27,6 +27,8 @@ To use this tutorial you will need to:
 .. code:: bash 
 
   bash run_superglue.sh [TASK] [SUPERGLUEDATA] [SEED] [GPU_ID]
+  
+Note that due to small validation sets and evidence of overfitting to the validation set on some of the tasks (CB, COPA, and WiC), we also recommend using cross-validation on these tasks. For each, we ran k-fold cross-validation with a value of k that would result in a validation set of approximately the same size as the original provided split.
 
 Acknowledgements
 ----------------

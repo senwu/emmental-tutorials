@@ -19,7 +19,7 @@ In this `tutorial <glue/>`_, we build an Emmental application to tackle the Gene
 SuperGLUE Tutorial
 -------------
 
-In this `tutorial <superglue/>`_, we build an Emmental application to tackle the SuperGLUE, a new benchmark styled after GLUE with a new set of more difficult language understanding tasks, improved resources, which achieves the `start-of-the-art score`_ on SuperGLUE benchmark on June 15, 2019 under the name of Stanford Hazy Research.
+In this `tutorial <superglue/>`_, we build an Emmental application to tackle `SuperGLUE`_, a new benchmark in the same style as GLUE with a set of more difficult language understanding tasks. Our submission achieved a new `start-of-the-art score`_ on June 15, 2019 under the name of Stanford Hazy Research. This code has also been refactored to be compatible with the `Snorkel`_ project in the `snorkel-superglue`_ repository.
 
 
 Installation
@@ -59,3 +59,6 @@ Then, install Emmental and any other python dependencies by running:
 .. _virtualenv: https://virtualenv.pypa.io/en/stable/
 .. _`CheXNet paper`: https://arxiv.org/pdf/1711.05225
 .. _`start-of-the-art score`: https://super.gluebenchmark.com/leaderboard
+.. _`SuperGLUE`: https://super.gluebenchmark.com
+.. _`Snorkel`: http://snorkel.stanford.edu
+.. _`snorkel-superglue`: https://github.com/HazyResearch/snorkel-superglue

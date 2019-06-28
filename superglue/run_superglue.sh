@@ -14,9 +14,13 @@ LOGPATH=${3:-logs}
 SEED=${4:-111}
 GPU=${5:-0}
 
+# for pretraining
+MNLICKPT=${6}
+SWAGCKPT=${7}
+
 # Check TASK name
 case ${TASK} in
-    cb|copa|multirc|rte|wic|wsc)
+    cb|copa|multirc|rte|wic|wsc|swag)
         echo "TASK: ${TASK}"
         echo "DATA: ${SUPERGLUEDATA}"
         echo "LOGPATH: ${LOGPATH}"
@@ -41,15 +45,17 @@ if [ ${TASK} == "cb" ]; then
         --lr 1e-5 \
         --grad_clip 5.0 \
         --warmup_percentage 0.0 \
-        --counter_unit epochs \
+        --counter_unit epoch \
         --evaluation_freq 0.1 \
         --checkpointing 1 \
-	--checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
+        --checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
         --batch_size 4 \
         --max_sequence_length 256 \
-        --dataparallel 0
+        --dataparallel 0 \
+        --slices 1
+#        --model_path $MNLICKPT
 elif [ ${TASK} == "copa" ]; then
     python run.py \
         --task COPA \
@@ -68,13 +74,14 @@ elif [ ${TASK} == "copa" ]; then
         --counter_unit epoch \
         --evaluation_freq 1 \
         --checkpoint_freq 1 \
-	--checkpointing 1 \
+        --checkpointing 1 \
         --checkpoint_metric COPA/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
         --batch_size 4 \
         --max_sequence_length 40 \
-        --dataparallel 0
+        --dataparallel 0 \
+#        --model_path $SWAGCKPT
 elif [ ${TASK} == "multirc" ]; then
     python run.py \
         --task MultiRC \
@@ -93,7 +100,7 @@ elif [ ${TASK} == "multirc" ]; then
         --counter_unit batch \
         --evaluation_freq 1000 \
         --checkpoint_freq 1 \
-	--checkpointing 1 \
+        --checkpointing 1 \
         --checkpoint_metric MultiRC/SuperGLUE/val/em_f1:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
@@ -110,14 +117,14 @@ elif [ ${TASK} == "rte" ]; then
         --n_epochs 50 \
         --train_split train \
         --valid_split val \
-	--optimizer adamax \
+        --optimizer adamax \
         --lr 2e-5 \
         --grad_clip 1.0 \
         --warmup_percentage 0.1 \
         --counter_unit epoch \
         --evaluation_freq 0.25 \
-	--checkpoint_freq 1 \
-	--checkpointing 1 \
+        --checkpoint_freq 1 \
+        --checkpointing 1 \
         --checkpoint_metric RTE/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --checkpoint_runway 1.0 \
@@ -126,7 +133,8 @@ elif [ ${TASK} == "rte" ]; then
         --max_sequence_length 256 \
         --slices 1 \
         --general_slices 1 \
-        --dataparallel 0
+        --dataparallel 0 \
+#        --model_path $MNLICKPT
 elif [ ${TASK} == "wic" ]; then
     python run.py \
         --task WiC \
@@ -136,21 +144,23 @@ elif [ ${TASK} == "wic" ]; then
         --device ${GPU} \
         --n_epochs 20 \
         --train_split train \
-	--valid_split val \
-	--optimizer adam \
+        --valid_split val \
+        --optimizer adam \
         --lr 1e-5 \
         --grad_clip 5.0 \
         --warmup_percentage 0.0 \
         --counter_unit epoch \
         --evaluation_freq 0.1 \
         --checkpoint_freq 1 \
-	--checkpointing 1 \
+        --checkpointing 1 \
         --checkpoint_metric WiC/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \
         --batch_size 4 \
         --max_sequence_length 256 \
-        --dataparallel 0
+        --dataparallel 0 \
+        --slices 1 \
+        --general_slices 1
 elif [ ${TASK} == "wsc" ]; then
     python run.py \
         --task WSC \
@@ -169,7 +179,7 @@ elif [ ${TASK} == "wsc" ]; then
         --counter_unit epoch \
         --evaluation_freq 1 \
         --checkpoint_freq 1 \
-	--checkpointing 1 \
+        --checkpointing 1 \
         --checkpoint_metric WSC/SuperGLUE/val/accuracy:max \
         --checkpoint_task_metrics model/train/all/loss:min \
         --bert_model bert-large-cased \

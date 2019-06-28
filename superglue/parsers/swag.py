@@ -122,10 +122,12 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             + ["[SEP]"]
         )
 
-        token1_ids = tokenizer.convert_tokens_to_ids(token1)
-        token2_ids = tokenizer.convert_tokens_to_ids(token2)
-        token3_ids = tokenizer.convert_tokens_to_ids(token3)
-        token4_ids = tokenizer.convert_tokens_to_ids(token4)
+        max_choice_len = 0
+
+        token1_ids = tokenizer.convert_tokens_to_ids(token1)[:max_sequence_length]
+        token2_ids = tokenizer.convert_tokens_to_ids(token2)[:max_sequence_length]
+        token3_ids = tokenizer.convert_tokens_to_ids(token3)[:max_sequence_length]
+        token4_ids = tokenizer.convert_tokens_to_ids(token4)[:max_sequence_length]
 
         token1_masks = [1] * len(token1_ids)
         token2_masks = [1] * len(token2_ids)
@@ -145,6 +147,26 @@ def parse(csv_path, tokenizer, uid, max_data_samples, max_sequence_length):
             max_len = len(token3_ids)
         if len(token4_ids) > max_len:
             max_len = len(token4_ids)
+
+        max_choice_len = max(max_choice_len, len(token1_ids))
+        max_choice_len = max(max_choice_len, len(token2_ids))
+        max_choice_len = max(max_choice_len, len(token3_ids))
+        max_choice_len = max(max_choice_len, len(token4_ids))
+
+        token1_ids += [0] * (max_choice_len - len(token1_ids))
+        token2_ids += [0] * (max_choice_len - len(token2_ids))
+        token3_ids += [0] * (max_choice_len - len(token3_ids))
+        token4_ids += [0] * (max_choice_len - len(token4_ids))
+
+        token1_masks += [0] * (max_choice_len - len(token1_masks))
+        token2_masks += [0] * (max_choice_len - len(token2_masks))
+        token3_masks += [0] * (max_choice_len - len(token3_masks))
+        token4_masks += [0] * (max_choice_len - len(token4_masks))
+
+        token1_segments += [0] * (max_choice_len - len(token1_segments))
+        token2_segments += [0] * (max_choice_len - len(token2_segments))
+        token3_segments += [0] * (max_choice_len - len(token3_segments))
+        token4_segments += [0] * (max_choice_len - len(token4_segments))
 
         bert_token1_ids.append(torch.LongTensor(token1_ids))
         bert_token2_ids.append(torch.LongTensor(token2_ids))

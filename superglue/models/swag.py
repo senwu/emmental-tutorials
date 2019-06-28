@@ -14,7 +14,7 @@ sys.path.append("..")  # Adds higher directory to python modules path.
 
 
 TASK_NAME = "SWAG"
-NUM_CHOICES = 2
+NUM_CHOICES = 4
 
 
 def build_model(bert_model_name, last_hidden_dropout_prob=0.0):

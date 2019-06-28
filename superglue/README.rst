@@ -21,7 +21,7 @@ To use this tutorial you will need to:
 .. code:: bash
   bash download_data.sh [DATA]
 
-3. Run the SuperGLUE task with the following command, where `TASK` is one of `cb`, `copa`, `multirc`, `rte`, `wic`, `wsc`.
+3. Run the SuperGLUE task with the following command, where `TASK` is one of `cb`, `copa`, `multirc`, `rte`, `wic`, `wsc` and external task for pretraining (e.g., `swag`).
 
 .. code:: bash 
 

@@ -1,22 +1,20 @@
 """
-Script the calls `run.py` using fixed_args and search_space specified in <config>.json file.
+Script the calls `run.py` using fixed_args and search_space specified in <config>.json
+file.
 
 Sample:
-python search.py --max_search 2 --config /dfs/scratch0/vschen/emmental-tutorials/superglue/example_config.json
+python search.py \
+    --max_search 2 \
+    --config /dfs/scratch0/vschen/emmental-tutorials/superglue/example_config.json
 """
 
 import argparse
-import datetime
 import json
-import os
-import pprint
 import random
-import subprocess
 from itertools import cycle, product
 
 import numpy as np
-from run import get_parser
-from run import main as launch
+from run import get_parser, main as launch
 
 
 def config_generator(search_space, max_search, rng, shuffle=True):
@@ -121,7 +119,6 @@ def main(args):
         search_space, args.max_search, random.Random(args.search_seed), True
     )
 
-    config_to_metrics = {}
     for search_conf in configs:
         full_conf = {}
         full_conf.update(search_conf)
@@ -144,7 +141,7 @@ def main(args):
         print("*" * 80)
         parser = get_parser()
         launch_args = parser.parse_args(arg_list)
-        metrics_path = launch(launch_args)
+        launch(launch_args)
 
 
 if __name__ == "__main__":

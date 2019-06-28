@@ -15,7 +15,7 @@ from models.multirc import build_model as build_model_multirc
 from models.rte import build_model as build_model_rte
 from models.wic import build_model as build_model_wic
 from models.wsc import build_model as build_model_wsc
-from task_config import SuperGLUE_LABEL_INVERSE, SuperGLUE_TASK_SPLIT_MAPPING
+from task_config import SuperGLUE_LABEL_INVERSE
 
 logger = logging.getLogger(__name__)
 

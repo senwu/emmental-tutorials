@@ -1,12 +1,13 @@
 #!/bin/bash
 # This script is for running our SuperGLUE approach.
-# Usage: bash run_superglue.sh ${TASK} ${SUPERGLUEDATA} ${SEED} ${GPU_ID}
+# Usage: bash run_superglue.sh ${TASK} ${SUPERGLUEDATA} ${SEED} ${GPU_ID} ${CKPT}
 #   - TASK: one of {"cb", "copa", "multirc", "rte", "wic", "wsc", "swag"}
 #       Note: swag is an external task used for copa pretraining
 #   - SUPERGLUEDATA: SuperGLUE data directory. Defaults to "data".
 #   - LOGPATH: log directory. Defaults to "logs".
 #   - SEED: random seed. Defaults to 111.
 #   - GPU_ID: GPU to use, or -1 for CPU. Defaults to 0.
+#   - CKPT: path to checkpoint. Defualts to None.
 
 TASK=${1}
 SUPERGLUEDATA=${2:-data}
@@ -15,7 +16,7 @@ SEED=${4:-111}
 GPU=${5:-0}
 
 # for pretraining
-CKPT=${6:-null}
+CKPT=${6:-None}
 
 
 # Check TASK name

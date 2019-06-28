@@ -55,7 +55,7 @@ if [ ${TASK} == "cb" ]; then
         --max_sequence_length 256 \
         --dataparallel 0 \
         --slices 1
-#        --model_path $MNLICKPT
+        --model_path $MNLICKPT
 elif [ ${TASK} == "copa" ]; then
     python run.py \
         --task COPA \
@@ -81,7 +81,7 @@ elif [ ${TASK} == "copa" ]; then
         --batch_size 4 \
         --max_sequence_length 40 \
         --dataparallel 0 \
-#        --model_path $SWAGCKPT
+        --model_path $SWAGCKPT
 elif [ ${TASK} == "multirc" ]; then
     python run.py \
         --task MultiRC \
@@ -134,7 +134,7 @@ elif [ ${TASK} == "rte" ]; then
         --slices 1 \
         --general_slices 1 \
         --dataparallel 0 \
-#        --model_path $MNLICKPT
+        --model_path $MNLICKPT
 elif [ ${TASK} == "wic" ]; then
     python run.py \
         --task WiC \

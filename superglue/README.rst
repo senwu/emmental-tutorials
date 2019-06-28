@@ -26,8 +26,13 @@ To use this tutorial you will need to:
 .. code:: bash 
 
   bash run_superglue.sh [TASK] [DATA] [SEED] [GPU_ID]
-  
-Note that due to small validation sets and evidence of overfitting to the validation set on some of the tasks (CB, COPA, and WiC), we also recommend using cross-validation on these tasks. For each, we ran k-fold cross-validation with a value of k that would result in a validation set of approximately the same size as the original provided split.
+
+Pretraining [Optional]
+----------------------
+We use pretrained models to improve model perfromance, for example we use `MNLI` model from `GLUE tutorial <../glue/>`_ for `RTE` and `CB` task, and use `SWAG` model to improve `COPA` task. To get the pretrained model, you can train `MNLI` model using GLUE tutorial and `SWAG` using this tutorial.
+
+
+**Note:** Due to small validation sets and evidence of overfitting to the validation set on some of the tasks (CB, COPA, and WiC), we also recommend using cross-validation on these tasks. For each, we ran k-fold cross-validation with a value of k that would result in a validation set of approximately the same size as the original provided split.
 
 Acknowledgements
 ----------------

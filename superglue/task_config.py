@@ -7,7 +7,7 @@ SuperGLUE_TASK_SPLIT_MAPPING = {
     "RTE": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
     "WiC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
     "WSC": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
-    #### External Task ####
+    # External Task #
     "SWAG": {"train": "train.csv", "val": "val.csv", "test": "test.csv"},
     "SemCor": {"train": "train.jsonl", "val": "val.jsonl", "test": "test.jsonl"},
 }

@@ -13,9 +13,6 @@ import jsonlines
 import numpy as np
 from task_config import SuperGLUE_LABEL_INVERSE
 
-# ROOT = "/dfs/scratch1/bradenjh/emmental-tutorials/superglue/logs/CB/cb_5fold_slices"
-# ROOT = "/dfs/scratch1/vschen/superglue-models/COPA/from_SWAG/cross_val/2019_06_12"
-
 
 @click.command()
 @click.option("--task_name", required=True)
@@ -28,7 +25,8 @@ def merge_probs(root, task_name):
 
     # Print evaluation scores
     subprocess.call(
-        "find " + root + ' -type f -name "best_metrics.txt" -exec cat {} \;', shell=True
+        r"find " + root + r' -type f -name "best_metrics.txt" -exec cat {} \;',
+        shell=True,
     )
 
     preds_dict = defaultdict(list)

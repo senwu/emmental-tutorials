@@ -2,7 +2,7 @@ import torch
 from torch import nn
 
 
-class PreModule(nn.Module):
+class MultipleChoiceModule(nn.Module):
     def __init__(self, n_choices=2):
         super().__init__()
 

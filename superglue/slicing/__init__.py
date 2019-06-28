@@ -40,17 +40,15 @@ def add_slice_labels(task_name, dataloaders, slice_func_dict):
     for dataloader in dataloaders:
         for slice_name, slice_func in slice_func_dict.items():
             ind, pred = slice_func(dataloader.dataset)
+
+            slice_ind_name = f"{task_name}_slice_ind_{slice_name}"
+            slice_pred_name = f"{task_name}_slice_pred_{slice_name}"
+
             dataloader.dataset.Y_dict.update(
-                {
-                    f"{task_name}_slice_ind_{slice_name}": ind,
-                    f"{task_name}_slice_pred_{slice_name}": pred,
-                }
+                {slice_ind_name: ind, slice_pred_name: pred}
             )
             dataloader.task_to_label_dict.update(
-                {
-                    f"{task_name}_slice_ind_{slice_name}": f"{task_name}_slice_ind_{slice_name}",
-                    f"{task_name}_slice_pred_{slice_name}": f"{task_name}_slice_pred_{slice_name}",
-                }
+                {slice_ind_name: slice_ind_name, slice_pred_name: slice_pred_name}
             )
         main_label = dataloader.task_to_label_dict[task_name]
         del dataloader.task_to_label_dict[task_name]
@@ -79,8 +77,8 @@ def add_slice_tasks(task_name, base_task, slice_func_dict, hidden_dim=1024):
         x["name"] for x in base_task_flow
     ], f"{task_name}_feature should in the task module_pool"
 
-    assert (
-        isinstance(base_module_pool[f"{task_name}_pred_head"], nn.Linear) == True
+    assert isinstance(
+        base_module_pool[f"{task_name}_pred_head"], nn.Linear
     ), f"{task_name}_pred_head should be a nn.Linear layer"
 
     # extract last layer info

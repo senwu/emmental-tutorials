@@ -115,6 +115,13 @@ def main(args):
 
     # Initialize Emmental
     config = parse_arg_to_config(args)
+    # HACK: handle None in model_path, proper way to handle this in the
+    # next release of Emmental
+    if (
+        config["model_config"]["model_path"]
+        and config["model_config"]["model_path"].lower() == "none"
+    ):
+        config["model_config"]["model_path"] = None
     emmental.init(config["meta_config"]["log_path"], config=config)
 
     # Save command line argument into file

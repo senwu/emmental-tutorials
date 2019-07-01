@@ -25,6 +25,7 @@ class CXR8Dataset(EmmentalDataset):
         sample=0,
         finding="any",
         seed=0,
+        add_binary_triage_label=False,
     ):
         self.transform = transform
         self.path_to_images = path_to_images
@@ -79,6 +80,10 @@ class CXR8Dataset(EmmentalDataset):
 
         X_dict = {"image_name": []}
         Y_dict = {}
+        
+        if add_binary_triage_label:
+            self.PRED_LABEL = self.PRED_LABEL + ['Abnormal']
+            self.df['Abnormal'] = self.df.sum(axis=1)
 
         for idx in range(len(self.df)):
             X_dict["image_name"].append(self.df.index[idx])
@@ -90,7 +95,7 @@ class CXR8Dataset(EmmentalDataset):
 
         for label in self.PRED_LABEL:
             Y_dict[label] = torch.from_numpy(np.array(Y_dict[label]))
-
+           
         super().__init__(name, X_dict=X_dict, Y_dict=Y_dict)
 
     def __len__(self):

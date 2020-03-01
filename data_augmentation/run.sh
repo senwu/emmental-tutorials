@@ -5,14 +5,14 @@ model=${4:-wide_resnet}
 augment_policy=${5:-uncertainty_sampling}
 batch_size=${6:-128}
 num_comp=${7:-2}
-augment_k=${8:-1}
+augment_k=${8:-4}
 augment_enlarge=${9:-1}
-epoch=${12:-200}
+epoch=${10:-200}
 lr=${11:-0.1}
-l2=${10:-0.0005}
-grad_clip=${15:-None}
-lr_scheduler=${13:-multi_step}
-lr_scheduler_step_unit=${14:-epoch}
+l2=${12:-0.0005}
+grad_clip=${13:-None}
+lr_scheduler=${14:-multi_step}
+lr_scheduler_step_unit=${15:-epoch}
 
 
 CUDA_VISIBLE_DEVICES=${device} image --task ${task} \

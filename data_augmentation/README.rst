@@ -18,7 +18,16 @@ To use this tutorial you will need to:
 
 .. code:: bash
 
-  bash run.sh ${TASK} ${SEED} ${GPU_IDS} ${MODEL_NAME} uncertainty_sampling ${BATCH_SIZE} ${NUM_COMP} ${AUGMENT_K} ${AUGMENT_ENLARGE}
+  bash run.sh \
+         ${TASK} \
+         ${SEED} \
+         ${GPU_IDS} \
+         ${MODEL_NAME} \
+         uncertainty_sampling \
+         ${BATCH_SIZE} \
+         ${NUM_COMP} \
+         ${AUGMENT_K} \
+         ${AUGMENT_ENLARGE}
 
 Acknowledgements
 ----------------

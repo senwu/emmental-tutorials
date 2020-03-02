@@ -14,7 +14,7 @@ To use this tutorial you will need to:
 
   make dev
 
-2. Run the image classification task with the following command. For more details, please check `run.sh`
+2. Run the image classification task with the following command.
 
 .. code:: bash
 
@@ -23,11 +23,39 @@ To use this tutorial you will need to:
          ${SEED} \
          ${GPU_IDS} \
          ${MODEL_NAME} \
-         uncertainty_sampling \
+         ${AUGMENT_POLICY} \
          ${BATCH_SIZE} \
          ${NUM_COMP} \
          ${AUGMENT_K} \
          ${AUGMENT_ENLARGE}
+
+The default `AUGMENT_POLICY` policy method is `uncertainty_sampling` which concatenates composition of ${NUM_COMP} random selected transformations and default transformations. For more details, please check `run.sh`.
+
+Specify your augmentation [Optional]
+----------------------------------------
+
+We provide 16 transformations in the tutorial:
+
+.. code:: bash
+
+  AutoContrast
+  Brightness
+  Color
+  Contrast
+  Cutout
+  Equalize
+  Invert
+  Mixup
+  Posterize
+  Rotate
+  Sharpness
+  ShearX
+  ShearY
+  Solarize
+  TranslateX
+  TranslateY
+
+For each transformation, you can set the probability and magnitude of applying the transformation (i.e. `AutoContrast_P{PROBABILITY}_L{MAGNITUDE}`), otherwise they are all random. You can also composite different transformation by concatenating them with `@` (i.e. `AutoContrast@Color`).
 
 Acknowledgements
 ----------------

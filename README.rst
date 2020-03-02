@@ -21,6 +21,11 @@ SuperGLUE Tutorial
 
 In this `tutorial <superglue/>`_, we build an Emmental application to tackle `SuperGLUE`_, a new benchmark in the same style as GLUE with a set of more difficult language understanding tasks. Our submission achieved a new `start-of-the-art score`_ on June 15, 2019 under the name of Stanford Hazy Research. This code has also been refactored and used in the `Snorkel`_ project in the `snorkel-superglue`_ repository.
 
+Data augmentation Tutorial
+-------------
+
+In this `tutorial <data_augmentation/>`_, we build an Emmental application to tackle image classification benchmarks (i.e. MNIST, CIFAR-10, and CIFAR-100) to study how to make data augmentation more efficient. More specifically, we propose an uncertainty-based random sampling scheme which, among the transformed data points, picks those with the highest losses, i.e. those "providing the most information".
+
 
 Installation
 ------------

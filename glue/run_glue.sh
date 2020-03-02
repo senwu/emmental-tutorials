@@ -36,4 +36,8 @@ python run.py \
   --checkpoint_clear True \
   --bert_model bert-large-uncased \
   --batch_size 16 \
-  --max_sequence_length 200
+  --max_sequence_length 200 \
+  --lr_scheduler step \
+  --step_lr_scheduler_step_size 5 \
+  --multi_step_lr_scheduler_milestones 1 2 3 \
+  --multi_step_lr_scheduler_last_epoch 1

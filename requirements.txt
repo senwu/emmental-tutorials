@@ -1,1 +1,1 @@
-emmental==0.0.4
+emmental==0.0.5

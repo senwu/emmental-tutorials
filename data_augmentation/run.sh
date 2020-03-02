@@ -11,8 +11,8 @@ epoch=${10:-200}
 lr=${11:-0.1}
 l2=${12:-0.0005}
 grad_clip=${13:-None}
-lr_scheduler=${14:-multi_step}
-lr_scheduler_step_unit=${15:-epoch}
+lr_scheduler=${14:-cosine_annealing}
+lr_scheduler_step_unit=${15:-batch}
 
 
 CUDA_VISIBLE_DEVICES=${device} image --task ${task} \
@@ -35,8 +35,6 @@ CUDA_VISIBLE_DEVICES=${device} image --task ${task} \
       --sgd_nesterov 1 \
       --lr_scheduler ${lr_scheduler} \
       --lr_scheduler_step_unit ${lr_scheduler_step_unit} \
-      --multi_step_lr_scheduler_milestones 60 120 160 \
-      --multi_step_lr_scheduler_gamma 0.2 \
       --valid_split test \
       --checkpointing 1 \
       --checkpoint_metric ${task}/${task}/test/accuracy:max \

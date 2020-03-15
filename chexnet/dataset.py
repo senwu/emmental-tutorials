@@ -24,7 +24,6 @@ class CXR8Dataset(EmmentalDataset):
         transform=None,
         sample=0,
         finding="any",
-        seed=0,
     ):
         self.transform = transform
         self.path_to_images = path_to_images
@@ -32,7 +31,6 @@ class CXR8Dataset(EmmentalDataset):
         self.split = split
         self.df = pd.read_csv(self.path_to_labels)
         self.df = self.df[self.df["fold"] == split]
-        self.seed = seed
 
         # can limit to sample, useful for testing
         # if split == "train" or split =="val": sample=500
@@ -85,8 +83,7 @@ class CXR8Dataset(EmmentalDataset):
             for label in self.PRED_LABEL:
                 if label not in Y_dict:
                     Y_dict[label] = []
-                # +1 for 1 index
-                Y_dict[label].append(self.df[label].iloc[idx].astype("int") + 1)
+                Y_dict[label].append(self.df[label].iloc[idx].astype("int"))
 
         for label in self.PRED_LABEL:
             Y_dict[label] = torch.from_numpy(np.array(Y_dict[label]))
@@ -94,7 +91,7 @@ class CXR8Dataset(EmmentalDataset):
         super().__init__(name, X_dict=X_dict, Y_dict=Y_dict)
 
     def __len__(self):
-        return len(self.df)
+        return len(self.X_dict["image_name"])
 
     def __getitem__(self, index):
 
@@ -106,7 +103,9 @@ class CXR8Dataset(EmmentalDataset):
         if self.transform:
             image = self.transform(image)
 
-        x_dict = {"image": image}
+        x_dict = {name: feature[index] for name, feature in self.X_dict.items()}
         y_dict = {name: label[index] for name, label in self.Y_dict.items()}
+
+        x_dict["image"] = image
 
         return x_dict, y_dict

@@ -16,7 +16,7 @@ def get_data_transforms(dataset_name):
             "train": transforms.Compose(
                 [
                     transforms.RandomHorizontalFlip(),
-                    transforms.Scale(224),
+                    transforms.Resize(224),
                     # because scale doesn't always give 224 x 224, this ensures 224 x
                     # 224
                     transforms.CenterCrop(224),
@@ -26,7 +26,7 @@ def get_data_transforms(dataset_name):
             ),
             "val": transforms.Compose(
                 [
-                    transforms.Scale(224),
+                    transforms.Resize(224),
                     transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std),
@@ -34,7 +34,7 @@ def get_data_transforms(dataset_name):
             ),
             "test": transforms.Compose(
                 [
-                    transforms.Scale(224),
+                    transforms.Resize(224),
                     transforms.CenterCrop(224),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std),

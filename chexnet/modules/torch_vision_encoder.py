@@ -5,7 +5,7 @@ from torchvision import models
 
 
 class TorchVisionEncoder(nn.Module):
-    def __init__(self, net_name, freeze_cnn=False, pretrained=False, drop_rate=0.0):
+    def __init__(self, net_name, freeze_cnn=False, pretrained=False, drop_rate=0.2):
         super().__init__()
         self.model = self.get_tv_encoder(net_name, pretrained, drop_rate)
         if freeze_cnn:

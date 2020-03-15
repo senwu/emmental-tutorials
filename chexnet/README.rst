@@ -19,7 +19,7 @@ To use this tutorial you will need to:
 2. Download the CheXNet dataset (including all images and meta information file
 (e.g. nih_labels.csv)) used in the tutorial to the local directory.
 
-3. Run the CheXNet tasks with the following command, where ``TASK`` is task name
+3. Run the CheXNet tasks with the following command, where ``TASK`` is the task name
 list delimited by ``,``, any combination from ``Atelectasis``, ``Cardiomegaly``,
 ``Effusion``, ``Infiltration``, ``Mass``, ``Nodule``, ``Pneumonia``, ``Pneumothorax``,
 ``Consolidation``, ``Edema``, ``Emphysema``, ``Fibrosis``, ``Pleural_Thickening``, and
@@ -32,7 +32,8 @@ list delimited by ``,``, any combination from ``Atelectasis``, ``Cardiomegaly``,
 Acknowledgements
 ----------------
 
-Much of the code in this tutorial was adapted from the reproduce-chexnet_. We thank all authors to provide these available online.
+Much of the code in this tutorial was adapted from the reproduce-chexnet_. We thank
+all authors to provide these available online.
 
 .. _Emmental: https://github.com/SenWu/emmental
 .. _reproduce-chexnet: https://github.com/jrzech/reproduce-chexnet

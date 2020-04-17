@@ -6,26 +6,30 @@ Introduction Tutorials
 
 We have several `introductory tutorials <intro/>`_ to help get you started with using Emmental.
 
-Chexnet
--------
+Chexnet Tutorial
+````````````````
 
 In this `tutorial <chexnet/>`_, we build an Emmental application to predicted 14 common diagnoses using convolutional neural networks in over 100,000 NIH chest x-rays proposed from the `CheXNet paper`_.
 
 GLUE Tutorial
--------------
+`````````````
 
 In this `tutorial <glue/>`_, we build an Emmental application to tackle the General Language Understanding Evaluation (GLUE) benchmark which is a collection of resources for training, evaluating, and analyzing natural language understanding systems.
 
 SuperGLUE Tutorial
--------------
+``````````````````
 
 In this `tutorial <superglue/>`_, we build an Emmental application to tackle `SuperGLUE`_, a new benchmark in the same style as GLUE with a set of more difficult language understanding tasks. Our submission achieved a new `start-of-the-art score`_ on June 15, 2019 under the name of Stanford Hazy Research. This code has also been refactored and used in the `Snorkel`_ project in the `snorkel-superglue`_ repository.
 
 Data augmentation Tutorial
--------------
+``````````````````````````
 
 In this `tutorial <data_augmentation/>`_, we build an Emmental application to tackle image classification benchmarks (i.e. MNIST, CIFAR-10, and CIFAR-100) to study how to make data augmentation more efficient. More specifically, we propose an uncertainty-based random sampling scheme which, among the transformed data points, picks those with the highest losses, i.e. those "providing the most information".
 
+Text classification Tutorial
+````````````````````````````
+
+In this `tutorial <text_classification/>`_, we build an Emmental application to tackle the text classification. More specifically, we analyze how information transfer among different tasks in mulit-task learning settings.
 
 Installation
 ------------

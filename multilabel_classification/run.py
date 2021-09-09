@@ -3,20 +3,22 @@
 
 import argparse
 import logging
+import os
 import sys
 
 import emmental
-from dataset import ToxicCommentDataset
 from emmental import Meta
 from emmental.data import EmmentalDataLoader
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_args import parse_args, parse_args_to_config
-from emmental.utils.utils import str2bool, str2list
+from emmental.utils.utils import str2bool
+from transformers import AutoTokenizer
+
+from dataset import ToxicCommentDataset
 from task import create_task
 from utils import write_to_file, write_to_json_file
-from transformers import AutoTokenizer
-import os 
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,19 +27,23 @@ def add_application_args(parser):
     # Application configuration
     application_config = parser.add_argument_group("Application configuration")
 
-    parser.add_argument("--data_path", type=str, help="The path to data files")
+    application_config.add_argument(
+        "--data_path", type=str, help="The path to data files"
+    )
 
-    parser.add_argument(
+    application_config.add_argument(
         "--model", type=str, default="distilbert-base-uncased", help="The model to use"
     )
 
-    parser.add_argument("--batch_size", type=int, default=5, help="batch size")
+    application_config.add_argument(
+        "--batch_size", type=int, default=5, help="batch size"
+    )
 
-    parser.add_argument(
+    application_config.add_argument(
         "--max_data_samples", type=int, default=0, help="Maximum data samples to use"
     )
 
-    parser.add_argument(
+    application_config.add_argument(
         "--train", type=str2bool, default=True, help="Whether to train the model"
     )
 
@@ -71,12 +77,12 @@ if __name__ == "__main__":
         use_fast=True,
     )
 
-    # train_split_ids = 
+    # train_split_ids =
 
     for split in ["train", "test"]:
         dataset = ToxicCommentDataset(
             name="toxic",
-            file_path=os.path.join(args.data_path, f"train.csv.zip"),
+            file_path=os.path.join(args.data_path, "train.csv.zip"),
             id_file_path=os.path.join(args.data_path, f"{split}_ids.csv"),
             split=split,
             tokenizer=tokenizer,

@@ -1,14 +1,16 @@
 # Copyright (c) 2021 Sen Wu. All Rights Reserved.
 
 
-import os
 import random
+
 import numpy as np
+import pandas as pd
 import torch
 from emmental.data import EmmentalDataset
-import pandas as pd
-from utils import read_csv
 from tqdm import tqdm
+
+from utils import read_csv
+
 
 class ToxicCommentDataset(EmmentalDataset):
     """Dataset to load Toxic comment dataset."""
@@ -29,7 +31,14 @@ class ToxicCommentDataset(EmmentalDataset):
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.max_data_samples = max_data_samples
-        self.label_keys = ["toxic","severe_toxic","obscene","threat","insult","identity_hate"]
+        self.label_keys = [
+            "toxic",
+            "severe_toxic",
+            "obscene",
+            "threat",
+            "insult",
+            "identity_hate",
+        ]
 
         X_dict = {"id": [], "comment_text": []}
         Y_dict = {"labels": []}
@@ -38,11 +47,12 @@ class ToxicCommentDataset(EmmentalDataset):
             random.shuffle(ids)
 
         for i in tqdm(range(len(df))):
-            if df.iloc[i]['id'] not in ids: continue        
+            if df.iloc[i]["id"] not in ids:
+                continue
             for key in X_dict.keys():
                 X_dict[key].append(df.iloc[i][key])
-            Y_dict['labels'].append([float(df.iloc[i][key]) for key in self.label_keys])
-            if self.max_data_samples and len(X_dict['id']) >= self.max_data_samples:
+            Y_dict["labels"].append([float(df.iloc[i][key]) for key in self.label_keys])
+            if self.max_data_samples and len(X_dict["id"]) >= self.max_data_samples:
                 break
         for key in Y_dict.keys():
             Y_dict[key] = torch.from_numpy(np.array(Y_dict[key]))

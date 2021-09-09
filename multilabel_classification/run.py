@@ -5,18 +5,18 @@ import argparse
 import logging
 import sys
 
+from dataset import MultiLabelDataset
+from task import create_task
+from transformers import AutoTokenizer
+from utils import write_to_file, write_to_json_file
+
 import emmental
 from emmental import Meta
 from emmental.data import EmmentalDataLoader
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_args import parse_args, parse_args_to_config
-from emmental.utils.utils import nullable_string, str2bool, str2list,nullable_int
-from transformers import AutoTokenizer
-
-from dataset import MultiLabelDataset
-from task import create_task
-from utils import write_to_file, write_to_json_file
+from emmental.utils.utils import nullable_int, nullable_string, str2bool, str2list
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,10 @@ def add_application_args(parser):
     )
 
     application_config.add_argument(
-        "--max_data_samples", type=nullable_int, default=None, help="Maximum data samples to use"
+        "--max_data_samples",
+        type=nullable_int,
+        default=None,
+        help="Maximum data samples to use",
     )
 
     application_config.add_argument(
@@ -112,7 +115,7 @@ if __name__ == "__main__":
             label_fields=args.label_fields,
             split=split,
             tokenizer=tokenizer,
-            max_data_samples=args.max_data_samples, # if split == "train" else None,
+            max_data_samples=args.max_data_samples,  # if split == "train" else None,
             max_seq_length=args.max_seq_length,
         )
         logger.info(f"Loaded {split} containing {len(dataset)} samples.")

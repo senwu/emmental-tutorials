@@ -1,9 +1,9 @@
 import logging
 
 import torchvision
-from emmental.data import EmmentalDataLoader
-
 from eda.image.datasets import ALL_DATASETS
+
+from emmental.data import EmmentalDataLoader
 
 logger = logging.getLogger(__name__)
 

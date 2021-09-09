@@ -1,6 +1,5 @@
-from PIL import ImageFilter
-
 from eda.image.transforms.transform import EdaTransform
+from PIL import ImageFilter
 
 
 class Smooth(EdaTransform):

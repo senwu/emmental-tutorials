@@ -73,8 +73,7 @@ def parse_transform(policy, task_name=None, prob_label=False):
 
 
 class Augmentation(object):
-    """Given the augment policy to generate the list of augmentation functions.
-    """
+    """Given the augment policy to generate the list of augmentation functions."""
 
     def __init__(self, args):
         self.args = args

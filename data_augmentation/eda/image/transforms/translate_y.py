@@ -1,9 +1,8 @@
 import random
 
-from PIL import Image
-
 from eda.image.transforms.transform import EdaTransform
 from eda.image.transforms.utils import categorize_value
+from PIL import Image
 
 
 class TranslateY(EdaTransform):

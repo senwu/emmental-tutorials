@@ -1,5 +1,4 @@
 import torchvision.transforms as transforms
-
 from eda.image.transforms.transform import EdaTransform
 
 

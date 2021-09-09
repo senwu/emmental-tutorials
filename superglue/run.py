@@ -4,16 +4,17 @@ import os
 import sys
 from functools import partial
 
-import emmental
 import models
 import slicing
 from dataloaders import get_dataloaders
+from submit import make_submission_file
+from utils import str2list, write_to_file
+
+import emmental
 from emmental import Meta
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_arg import parse_arg, parse_arg_to_config, str2bool
-from submit import make_submission_file
-from utils import str2list, write_to_file
 
 logger = logging.getLogger(__name__)
 

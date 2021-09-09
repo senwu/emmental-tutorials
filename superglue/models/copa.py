@@ -1,12 +1,13 @@
 import sys
 from functools import partial
 
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
 from modules.multiple_choice_module import MultipleChoiceModule
 from task_config import SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
+
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 from . import utils
 

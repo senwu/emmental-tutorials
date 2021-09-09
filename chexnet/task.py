@@ -1,10 +1,11 @@
 from functools import partial
 
 import torch.nn.functional as F
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 from modules.torch_vision_encoder import TorchVisionEncoder
 from torch import nn
+
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 
 def ce_loss(module_name, immediate_ouput_dict, Y, active):

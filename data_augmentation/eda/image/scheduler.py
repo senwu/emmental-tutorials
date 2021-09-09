@@ -5,10 +5,11 @@ from typing import Dict, Iterator, List, Tuple, Union
 
 import numpy as np
 import torch
-from emmental.data import EmmentalDataLoader
-from emmental.schedulers.scheduler import Scheduler
 from sklearn.preprocessing import normalize
 from torch import Tensor
+
+from emmental.data import EmmentalDataLoader
+from emmental.schedulers.scheduler import Scheduler
 
 logger = logging.getLogger(__name__)
 

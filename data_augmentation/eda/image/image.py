@@ -1,17 +1,17 @@
 import logging
 import sys
 
-import emmental
 import torch.backends.cudnn as cudnn
-from emmental.learner import EmmentalLearner
-from emmental.model import EmmentalModel
-from emmental.utils.parse_args import parse_args_to_config
-
 from eda.image.augment_policy import Augmentation
 from eda.image.data import get_dataloaders
 from eda.image.scheduler import AugScheduler
 from eda.image.task import create_task
 from eda.utils import write_to_file, write_to_json_file
+
+import emmental
+from emmental.learner import EmmentalLearner
+from emmental.model import EmmentalModel
+from emmental.utils.parse_args import parse_args_to_config
 
 logger = logging.getLogger(__name__)
 

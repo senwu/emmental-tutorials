@@ -4,8 +4,9 @@
 import numpy as np
 import pandas as pd
 import torch
-from emmental.data import EmmentalDataset
 from tqdm import tqdm
+
+from emmental.data import EmmentalDataset
 
 
 class MultiLabelDataset(EmmentalDataset):

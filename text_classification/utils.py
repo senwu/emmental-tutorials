@@ -1,6 +1,7 @@
 import json
 import os
 
+
 def write_to_file(file_path, value):
     """
     Write value to file.

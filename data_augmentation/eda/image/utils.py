@@ -3,8 +3,7 @@ from PIL import Image
 
 
 def relu_model(X, E, W, classification=False, delta=0.1):
-    """ReLU model
-    """
+    """ReLU model"""
     Y = W.dot(np.maximum((E.T @ X.T), 0.0)).reshape(-1)
     if classification:
         idx = abs(Y) >= delta

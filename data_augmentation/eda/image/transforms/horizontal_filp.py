@@ -1,6 +1,5 @@
-from PIL import Image
-
 from eda.image.transforms.transform import EdaTransform
+from PIL import Image
 
 
 class HorizontalFlip(EdaTransform):

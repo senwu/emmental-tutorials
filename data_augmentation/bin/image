@@ -3,10 +3,10 @@
 import argparse
 import logging
 
+from eda.image.image import main
+
 from emmental.utils.parse_args import parse_args
 from emmental.utils.utils import nullable_float, nullable_int, nullable_string, str2bool
-
-from eda.image.image import main
 
 logger = logging.getLogger(__name__)
 

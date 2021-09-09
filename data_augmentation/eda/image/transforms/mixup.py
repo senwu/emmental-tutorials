@@ -1,10 +1,9 @@
 import numpy as np
 import torch
-from torchvision.transforms import ToPILImage, ToTensor
-
 from eda.image.transforms.compose import Compose
 from eda.image.transforms.transform import EdaTransform
 from eda.image.utils import default_loader
+from torchvision.transforms import ToPILImage, ToTensor
 
 
 class Mixup(EdaTransform):

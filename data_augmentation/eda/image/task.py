@@ -4,13 +4,13 @@ from functools import partial
 import numpy as np
 import torch
 import torch.nn.functional as F
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
-from torch import nn
-
 from eda.image.config import TASK_INPUT_SIZE, TASK_METRIC, TASK_NUM_CLASS
 from eda.image.models import ALL_MODELS
 from eda.image.modules.soft_cross_entropy_loss import SoftCrossEntropyLoss
+from torch import nn
+
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 logger = logging.getLogger(__name__)
 

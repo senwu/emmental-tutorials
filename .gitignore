@@ -61,7 +61,7 @@ coverage.xml
 
 # Environments
 .env
-.venv*
+.venv
 .virtualenv
 env/
 venv/
@@ -75,9 +75,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-# project-specific
-logs/
-cache/
-submissions/
-saved_models/

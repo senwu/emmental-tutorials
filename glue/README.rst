@@ -23,8 +23,8 @@ To use this tutorial you will need to:
 
   bash run_glue.sh ${TASK} ${GLUEDATA} ${SEED} ${GPU_ID}
 
-Acknowledgements
-----------------
+Acknowledgments
+---------------
 
 
 Much of the code in this tutorial was adapted from the jiant_. We thank all authors to provide these available online.

@@ -31,8 +31,8 @@ details can be found in script.
 
   bash run_text_classification.sh ${TASK} [DATA] [MODEL] [LOGPATH] [SEED] [GPU_ID] [EMB]
 
-Acknowledgements
-----------------
+Acknowledgments
+---------------
 
 Much of the code in this tutorial was adapted from the sru_. We thank all authors to provide these available online.
 

@@ -1,5 +1,5 @@
 """
-Make a single prediction file by combining multiple probabilities files
+Make a single prediction file by combining multiple probabilities files.
 
 NOTE: This will not work for MultiRC
 """

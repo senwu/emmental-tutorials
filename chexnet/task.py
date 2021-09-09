@@ -34,20 +34,20 @@ def create_task(task_names, cnn_encoder="densenet121"):
             name=task_name,
             module_pool=nn.ModuleDict(
                 {
-                    f"feature": cnn_module,
+                    "feature": cnn_module,
                     f"{task_name}_pred_head": nn.Linear(classification_layer_dim, 2),
                 }
             ),
             task_flow=[
                 {
-                    "name": f"feature",
+                    "name": "feature",
                     "module": "feature",
                     "inputs": [("_input_", "image")],
                 },
                 {
                     "name": f"{task_name}_pred_head",
                     "module": f"{task_name}_pred_head",
-                    "inputs": [(f"feature", 0)],
+                    "inputs": [("feature", 0)],
                 },
             ],
             loss_func=loss_fn,

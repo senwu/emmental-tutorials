@@ -2,8 +2,7 @@ from torchvision import transforms
 
 
 def get_data_transforms(dataset_name):
-    """Get data transofrms based on dataset name"""
-
+    """Get data transofrms based on dataset name."""
     data_transforms = None
 
     if "CXR8" in dataset_name:

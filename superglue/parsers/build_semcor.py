@@ -1,6 +1,4 @@
-"""
-Converts SemCor dataset from xml word-per-line to jsonl sentence pairs
-"""
+"""Converts SemCor dataset from xml word-per-line to jsonl sentence pairs."""
 
 import logging
 import random

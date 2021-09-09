@@ -22,7 +22,7 @@ def get_dataloaders(
     augment=False,
     uid="uids",
 ):
-    """Load data and return dataloaders"""
+    """Load data and return dataloaders."""
 
     dataloaders = []
 

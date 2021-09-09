@@ -18,7 +18,8 @@ from run import get_parser, main as launch
 
 
 def config_generator(search_space, max_search, rng, shuffle=True):
-    """Generates config dicts from the given search space
+    """Generate config dicts from the given search space.
+
     Args:
         search_space: (dict) A dictionary of parameters to search over.
             See note below for more details.

@@ -172,7 +172,7 @@ def main(args):
         dataloaders.extend(task_dataloaders)
 
     # Build Emmental model
-    model = EmmentalModel(name=f"SuperGLUE", tasks=tasks)
+    model = EmmentalModel(name="SuperGLUE", tasks=tasks)
 
     # Load pretrained model if necessary
     if Meta.config["model_config"]["model_path"]:

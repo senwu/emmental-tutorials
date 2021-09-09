@@ -12,13 +12,13 @@ def slice_base(example):
 
 @slicing_function(fields=["pos"])
 def slice_verb(example):
-    """Is the target word a verb?"""
+    """Is the target word a verb."""
     return example.pos == "V"
 
 
 @slicing_function(fields=["pos"])
 def slice_noun(example):
-    """Is the target word a noun?"""
+    """Is the target word a noun."""
     return example.pos == "N"
 
 
@@ -26,7 +26,7 @@ def slice_noun(example):
     fields=["word", "sentence1", "sentence2", "sentence1_idx", "sentence2_idx"]
 )
 def slice_trigram(example):
-    """Does the target word share a trigram between sentences?"""
+    """If the target word share a trigram between sentences."""
 
     def get_ngrams(tokens, window=1):
         num_ngrams = len(tokens) - window + 1
@@ -53,7 +53,7 @@ def slice_trigram(example):
     fields=["pos", "sentence1", "sentence2", "sentence1_idx", "sentence2_idx"]
 )
 def slice_mismatch_verb(example):
-    """Is the target word a verb with different forms between sentences?"""
+    """Is the target word a verb with different forms between sentences."""
     form1 = example.sentence1.split()[example.sentence1_idx]
     form2 = example.sentence2.split()[example.sentence2_idx]
     return (form1 != form2) and example.pos == "V"
@@ -63,7 +63,7 @@ def slice_mismatch_verb(example):
     fields=["pos", "sentence1", "sentence2", "sentence1_idx", "sentence2_idx"]
 )
 def slice_mismatch_noun(example):
-    """Is the target word a noun with different forms between sentences?"""
+    """Is the target word a noun with different forms between sentences."""
     form1 = example.sentence1.split()[example.sentence1_idx]
     form2 = example.sentence2.split()[example.sentence2_idx]
     return (form1 != form2) and example.pos == "N"

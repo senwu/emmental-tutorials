@@ -49,8 +49,8 @@ We provide several transformations in the tutorial, here are some examples:
 
 For each transformation, you can set the probability and magnitude of applying the transformation (i.e. ``AutoContrast_P{PROBABILITY}_L{MAGNITUDE}``), otherwise they are all random. You can also composite different transformation by concatenating them with ``@`` (i.e. ``AutoContrast@Color``).
 
-Acknowledgements
-----------------
+Acknowledgments
+---------------
 
 Much of the code in this tutorial was adapted from the `Fast AutoAugment`_. We thank all authors to provide these available online.
 

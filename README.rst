@@ -1,5 +1,5 @@
 Emmental Tutorials
-===================
+==================
 
 Introduction Tutorials
 ----------------------
@@ -19,7 +19,7 @@ In this `tutorial <glue/>`_, we build an Emmental application to tackle the Gene
 SuperGLUE Tutorial
 ``````````````````
 
-In this `tutorial <superglue/>`_, we build an Emmental application to tackle `SuperGLUE`_, a new benchmark in the same style as GLUE with a set of more difficult language understanding tasks. Our submission achieved a new `start-of-the-art score`_ on June 15, 2019 under the name of Stanford Hazy Research. This code has also been refactored and used in the `Snorkel`_ project in the `snorkel-superglue`_ repository.
+In this `tutorial <superglue/>`_, we build an Emmental application to tackle `SuperGLUE`_, a new benchmark in the same style as GLUE with a set of more difficult language understanding tasks. Our submission achieved a new `start-of-the-art score`_ on June 15, 2019, under the name of Stanford Hazy Research. This code has also been refactored and used in the `Snorkel`_ project in the `snorkel-superglue`_ repository.
 
 Data augmentation Tutorial
 ``````````````````````````
@@ -29,7 +29,12 @@ In this `tutorial <data_augmentation/>`_, we build an Emmental application to ta
 Text classification Tutorial
 ````````````````````````````
 
-In this `tutorial <text_classification/>`_, we build an Emmental application to tackle the text classification. More specifically, we analyze how information transfer among different tasks in mulit-task learning settings.
+In this `tutorial <text_classification/>`_, we build an Emmental application to tackle the text classification. More specifically, we analyze how information transfer among different tasks in multi-task learning settings.
+
+Multilabel classification Tutorial
+``````````````````````````````````
+
+In this `tutorial <multilabel_classification/>`_, we build an Emmental application to tackle the multilabel classification problem. More specifically, we identify and classify toxic online comments into six categories: toxic, severe_toxic, obscene, threat, insult, and identity_hate. 
 
 Installation
 ------------

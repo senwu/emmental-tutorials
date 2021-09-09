@@ -1,5 +1,5 @@
 CheXNet
-=========
+=======
 
 In this advanced tutorial, we will build an Emmental_ application to tackle the
 CheXNet X-ray classification problem which is to predict 14 common diagnoses in
@@ -29,8 +29,8 @@ list delimited by ``,``, any combination from ``Atelectasis``, ``Cardiomegaly``,
 
   bash run.sh [DATAPATH] [IMAGEPATH] [TASK] [LOG] [SEED] [GPU] [LR]
 
-Acknowledgements
-----------------
+Acknowledgments
+---------------
 
 Much of the code in this tutorial was adapted from the reproduce-chexnet_. We thank
 all authors to provide these available online.

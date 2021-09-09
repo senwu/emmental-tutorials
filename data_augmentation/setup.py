@@ -6,7 +6,7 @@ setup(
     description="Understanding the data augmentation using Emmnetal.",
     install_requires=[
         "emmental>=0.0.5,<0.1.0",
-        "pillow>=6.2.1,<7.0.0",
+        "pillow>=8.3.2,<9.0.0",
         "torchvision>=0.4.2,<0.5.0",
     ],
     scripts=["bin/image"],

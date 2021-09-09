@@ -1,8 +1,7 @@
 import numpy as np
-from PIL import ImageDraw
-
 from eda.image.transforms.transform import EdaTransform
 from eda.image.transforms.utils import categorize_value
+from PIL import ImageDraw
 
 
 class Cutout(EdaTransform):

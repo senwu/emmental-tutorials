@@ -2,12 +2,13 @@ import collections
 from functools import partial
 
 import torch.nn.functional as F
-from emmental.metrics.fbeta import f1_scorer
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 from modules.bert_module import BertLastCLSModule, BertModule
 from task_config import SuperGLUE_LABEL_MAPPING, SuperGLUE_TASK_METRIC_MAPPING
 from torch import nn
+
+from emmental.metrics.fbeta import f1_scorer
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 
 def ce_loss(module_name, immediate_ouput_dict, Y, active):

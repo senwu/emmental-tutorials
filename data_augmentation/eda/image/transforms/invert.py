@@ -1,6 +1,5 @@
-from PIL import ImageOps
-
 from eda.image.transforms.transform import EdaTransform
+from PIL import ImageOps
 
 
 class Invert(EdaTransform):

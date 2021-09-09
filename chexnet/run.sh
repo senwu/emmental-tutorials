@@ -31,6 +31,7 @@ python run.py \
     --plateau_lr_scheduler_eps 0 \
     --dataparallel 0 \
     --evaluation_freq 1 \
+    --online_eval 1 \
     --checkpointing 1 \
     --checkpoint_metric model/all/val/loss:min \
     --clear_intermediate_checkpoints 1 \

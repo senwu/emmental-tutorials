@@ -2,17 +2,18 @@ import argparse
 import logging
 import sys
 
-import emmental
 from dataset import CXR8Dataset
+from task import create_task
+from transforms import get_data_transforms
+from utils import write_to_file, write_to_json_file
+
+import emmental
 from emmental import Meta
 from emmental.data import EmmentalDataLoader
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_args import parse_args, parse_args_to_config
 from emmental.utils.utils import str2bool, str2list
-from task import create_task
-from transforms import get_data_transforms
-from utils import write_to_file, write_to_json_file
 
 logger = logging.getLogger(__name__)
 

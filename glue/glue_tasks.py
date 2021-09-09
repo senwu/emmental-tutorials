@@ -1,12 +1,13 @@
 from functools import partial
 
 import torch.nn.functional as F
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 from modules.bert_module import BertModule
 from task_config import LABEL_MAPPING, METRIC_MAPPING
 from torch import nn
 from torch.nn import MSELoss
+
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 
 def ce_loss(task_name, immediate_ouput_dict, Y, active):

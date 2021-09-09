@@ -5,9 +5,7 @@ import numpy as np
 
 
 def write_to_file(file_path, value):
-    """
-    Write value to file.
-    """
+    """Write value to file."""
     directory = os.path.dirname(file_path)
     os.makedirs(directory, exist_ok=True)
     if not isinstance(value, str):
@@ -18,9 +16,7 @@ def write_to_file(file_path, value):
 
 
 def write_to_json_file(file_path, dict):
-    """
-    Write dict to json file.
-    """
+    """Write dict to json file."""
     directory = os.path.dirname(file_path)
     os.makedirs(directory, exist_ok=True)
     for k in dict.keys():

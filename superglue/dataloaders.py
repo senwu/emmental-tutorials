@@ -3,9 +3,10 @@ import os
 
 import augmentation
 import parsers
-from emmental.data import EmmentalDataLoader
 from task_config import SuperGLUE_TASK_SPLIT_MAPPING
 from tokenizer import get_tokenizer
+
+from emmental.data import EmmentalDataLoader
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ def get_dataloaders(
     augment=False,
     uid="uids",
 ):
-    """Load data and return dataloaders"""
+    """Load data and return dataloaders."""
 
     dataloaders = []
 

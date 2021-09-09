@@ -5,17 +5,18 @@ from typing import Dict, Iterator, List, Tuple, Union
 
 import numpy as np
 import torch
-from emmental.data import EmmentalDataLoader
-from emmental.schedulers.scheduler import Scheduler
 from sklearn.preprocessing import normalize
 from torch import Tensor
+
+from emmental.data import EmmentalDataLoader
+from emmental.schedulers.scheduler import Scheduler
 
 logger = logging.getLogger(__name__)
 
 
 class AugScheduler(Scheduler):
-    r"""Generate batch generator from all dataloaders in round robin order for MTL
-      training.
+    """Generate batch generator from all dataloaders in round robin order for
+      MTL training.
 
     Args:
       fillup(bool): Whether fillup to make all dataloader the same size.
@@ -35,7 +36,8 @@ class AugScheduler(Scheduler):
         ), f"{self.enlarge} <= {self.augment_k}"
 
     def get_num_batches(self, dataloaders: List[EmmentalDataLoader]) -> int:
-        r"""Get total number of batches per epoch.
+        """
+        Get total number of batches per epoch.
 
         Args:
           dataloaders(list): List of dataloaders.
@@ -67,7 +69,7 @@ class AugScheduler(Scheduler):
             str,
         ]
     ]:
-        r"""Generate batch generator from all dataloaders in round robin order for
+        """Generate batch generator from all dataloaders in round robin order for
           one epoch.
 
         Args:
@@ -75,7 +77,6 @@ class AugScheduler(Scheduler):
 
         Returns:
           genertor: A generator of all batches.
-
         """
         task_to_label_dicts = [
             dataloader.task_to_label_dict for dataloader in dataloaders

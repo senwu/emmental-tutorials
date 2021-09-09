@@ -14,7 +14,7 @@ class EdaTransform(object):
         self.name = name if name is not None else type(self).__name__
         self.prob = prob
 
-        assert 0 <= level <= 1.0, f"Invalid level, level must be in [0, 1.0]."
+        assert 0 <= level <= 1.0, "Invalid level, level must be in [0, 1.0]."
 
         self.level = level
 

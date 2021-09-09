@@ -3,8 +3,7 @@ from PIL import Image
 
 
 def relu_model(X, E, W, classification=False, delta=0.1):
-    """ReLU model
-    """
+    """Relu model."""
     Y = W.dot(np.maximum((E.T @ X.T), 0.0)).reshape(-1)
     if classification:
         idx = abs(Y) >= delta
@@ -16,6 +15,7 @@ def relu_model(X, E, W, classification=False, delta=0.1):
 
 
 def pil_loader(path):
+    """Pil image loader."""
     # open path as file to avoid ResourceWarning
     # (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, "rb") as f:

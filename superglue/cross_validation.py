@@ -1,5 +1,5 @@
 """
-THE PLAN:
+THE PLAN.
 Make temp directory
 Merge and shuffle train and val files
 fill subdirectories with splits
@@ -15,7 +15,6 @@ python cross_validation.py \
 [UPDATE config.json with only data_dir in the search space]
 python search.py --config config.json --max_search 10
 python merge_probs.py --task_name WiC --root /path/to/cv_dir
-
 """
 
 import os

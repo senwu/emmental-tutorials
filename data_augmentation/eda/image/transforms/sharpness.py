@@ -1,7 +1,6 @@
-from PIL import ImageEnhance
-
 from eda.image.transforms.transform import EdaTransform
 from eda.image.transforms.utils import categorize_value
+from PIL import ImageEnhance
 
 
 class Sharpness(EdaTransform):

@@ -2,11 +2,12 @@ import logging
 import sys
 from functools import partial
 
+from models import utils
+from torch import nn
+
 from emmental import Meta
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
-from models import utils
-from torch import nn
 
 from . import (
     CB_sfs,

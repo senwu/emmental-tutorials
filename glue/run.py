@@ -3,14 +3,15 @@ import logging
 import os
 import sys
 
+from glue_tasks import get_gule_task
+from preprocessor import preprocessor
+
 import emmental
 from emmental import Meta
 from emmental.data import EmmentalDataLoader, EmmentalDataset
 from emmental.learner import EmmentalLearner
 from emmental.model import EmmentalModel
 from emmental.utils.parse_arg import parse_arg, parse_arg_to_config
-from glue_tasks import get_gule_task
-from preprocessor import preprocessor
 
 logger = logging.getLogger(__name__)
 

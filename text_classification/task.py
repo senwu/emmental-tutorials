@@ -1,12 +1,12 @@
 from functools import partial
 
 import torch.nn.functional as F
+from modules import CNN, LSTM, Average
 from torch import nn
 
 from emmental.modules.identity_module import IdentityModule
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
-from modules import Average, CNN, LSTM
 
 
 def ce_loss(module_name, immediate_ouput_dict, Y, active):
@@ -22,9 +22,7 @@ def output(module_name, immediate_ouput_dict):
 def create_task(task_name, args, nclasses, emb_layer):
     if args.model == "cnn":
         input_module = IdentityModule()
-        feature_extractor = CNN(
-            emb_layer.n_d, widths=[3, 4, 5], filters=args.n_filters
-        )
+        feature_extractor = CNN(emb_layer.n_d, widths=[3, 4, 5], filters=args.n_filters)
         d_out = args.n_filters * 3
     elif args.model == "lstm":
         input_module = IdentityModule()

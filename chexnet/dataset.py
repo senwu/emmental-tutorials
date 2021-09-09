@@ -3,13 +3,14 @@ import os
 import numpy as np
 import pandas as pd
 import torch
-from emmental.data import EmmentalDataset
 from PIL import Image
+
+from emmental.data import EmmentalDataset
 
 
 class CXR8Dataset(EmmentalDataset):
     """
-    Dataset to load NIH Chest X-ray 14 dataset
+    Dataset to load NIH Chest X-ray 14 dataset.
 
     Modified from reproduce-chexnet repo
     https://github.com/jrzech/reproduce-chexnet

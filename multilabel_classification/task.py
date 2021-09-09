@@ -1,10 +1,11 @@
 from functools import partial
 
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 from sklearn.metrics import f1_score
 from torch import nn
 from transformers import AutoModel
+
+from emmental.scorer import Scorer
+from emmental.task import EmmentalTask
 
 criterion = nn.BCEWithLogitsLoss()
 

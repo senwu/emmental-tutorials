@@ -4,19 +4,18 @@ import torch.nn.functional as F
 from modules import CNN, LSTM, Average
 from torch import nn
 
+from emmental import EmmentalTaskFlowAction as Act
 from emmental.modules.identity_module import IdentityModule
 from emmental.scorer import Scorer
 from emmental.task import EmmentalTask
 
 
-def ce_loss(module_name, immediate_ouput_dict, Y, active):
-    return F.cross_entropy(
-        immediate_ouput_dict[module_name][0][active], Y.view(-1)[active]
-    )
+def ce_loss(module_name, immediate_ouput_dict, Y):
+    return F.cross_entropy(immediate_ouput_dict[module_name], Y)
 
 
 def output(module_name, immediate_ouput_dict):
-    return F.softmax(immediate_ouput_dict[module_name][0])
+    return F.softmax(immediate_ouput_dict[module_name])
 
 
 def create_task(task_name, args, nclasses, emb_layer):
@@ -49,19 +48,15 @@ def create_task(task_name, args, nclasses, emb_layer):
             }
         ),
         task_flow=[
-            {"name": "emb", "module": "emb", "inputs": [("_input_", "feature")]},
-            {
-                "name": "input",
-                "module": "input",
-                "inputs": [("emb", 0)],
-            },
-            {"name": "feature", "module": "feature", "inputs": [("input", 0)]},
-            {"name": "dropout", "module": "dropout", "inputs": [("feature", 0)]},
-            {
-                "name": f"{task_name}_pred_head",
-                "module": f"{task_name}_pred_head",
-                "inputs": [("dropout", 0)],
-            },
+            Act(name="emb", module="emb", inputs=[("_input_", "feature")]),
+            Act(name="input", module="input", inputs=[("emb", 0)]),
+            Act(name="feature", module="feature", inputs=[("input", 0)]),
+            Act(name="dropout", module="dropout", inputs=[("feature", 0)]),
+            Act(
+                name=f"{task_name}_pred_head",
+                module=f"{task_name}_pred_head",
+                inputs=[("dropout", 0)],
+            ),
         ],
         loss_func=partial(ce_loss, f"{task_name}_pred_head"),
         output_func=partial(output, f"{task_name}_pred_head"),

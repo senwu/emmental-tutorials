@@ -5,7 +5,7 @@ import pandas as pd
 import torch
 from PIL import Image
 
-from emmental.data import EmmentalDataset
+from emmental import EmmentalDataset
 
 
 class CXR8Dataset(EmmentalDataset):

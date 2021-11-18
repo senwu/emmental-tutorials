@@ -7,11 +7,7 @@ from task import create_task
 from transforms import get_data_transforms
 from utils import write_to_file, write_to_json_file
 
-import emmental
-from emmental import Meta
-from emmental.data import EmmentalDataLoader
-from emmental.learner import EmmentalLearner
-from emmental.model import EmmentalModel
+from emmental import EmmentalDataLoader, EmmentalLearner, EmmentalModel, Meta, init
 from emmental.utils.parse_args import parse_args, parse_args_to_config
 from emmental.utils.utils import str2bool, str2list
 
@@ -61,7 +57,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     config = parse_args_to_config(args)
-    emmental.init(config["meta_config"]["log_path"], config=config)
+    init(config["meta_config"]["log_path"], config=config)
 
     cmd_msg = " ".join(sys.argv)
     logger.info(f"COMMAND: {cmd_msg}")

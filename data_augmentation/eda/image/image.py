@@ -2,16 +2,14 @@ import logging
 import sys
 
 import torch.backends.cudnn as cudnn
+from emmental import EmmentalLearner, EmmentalModel, Meta, init
+from emmental.utils.parse_args import parse_args_to_config
+
 from eda.image.augment_policy import Augmentation
 from eda.image.data import get_dataloaders
 from eda.image.scheduler import AugScheduler
 from eda.image.task import create_task
 from eda.utils import write_to_file, write_to_json_file
-
-import emmental
-from emmental.learner import EmmentalLearner
-from emmental.model import EmmentalModel
-from emmental.utils.parse_args import parse_args_to_config
 
 logger = logging.getLogger(__name__)
 
@@ -19,15 +17,15 @@ logger = logging.getLogger(__name__)
 def main(args):
     # Initialize Emmental
     config = parse_args_to_config(args)
-    emmental.init(log_dir=config["meta_config"]["log_path"], config=config)
+    init(log_dir=config["meta_config"]["log_path"], config=config)
 
     # Log configuration into files
     cmd_msg = " ".join(sys.argv)
     logger.info(f"COMMAND: {cmd_msg}")
-    write_to_file(f"{emmental.Meta.log_path}/cmd.txt", cmd_msg)
+    write_to_file(f"{Meta.log_path}/cmd.txt", cmd_msg)
 
-    logger.info(f"Config: {emmental.Meta.config}")
-    write_to_file(f"{emmental.Meta.log_path}/config.txt", emmental.Meta.config)
+    logger.info(f"Config: {Meta.config}")
+    write_to_file(f"{Meta.log_path}/config.txt", Meta.config)
 
     # Create dataloaders
     dataloaders = get_dataloaders(args)
@@ -42,9 +40,9 @@ def main(args):
     config["learner_config"]["task_scheduler_config"]["task_scheduler"] = AugScheduler(
         augment_k=args.augment_k, enlarge=args.augment_enlarge
     )
-    emmental.Meta.config["learner_config"]["task_scheduler_config"][
-        "task_scheduler"
-    ] = config["learner_config"]["task_scheduler_config"]["task_scheduler"]
+    Meta.config["learner_config"]["task_scheduler_config"]["task_scheduler"] = config[
+        "learner_config"
+    ]["task_scheduler_config"]["task_scheduler"]
 
     # Create tasks
     model = EmmentalModel(name=f"{args.task}_task")
@@ -69,6 +67,6 @@ def main(args):
 
     # Save metrics and models
     logger.info(f"Metrics: {scores}")
-    scores["log_path"] = emmental.Meta.log_path
-    write_to_json_file(f"{emmental.Meta.log_path}/metrics.txt", scores)
-    model.save(f"{emmental.Meta.log_path}/last_model.pth")
+    scores["log_path"] = Meta.log_path
+    write_to_json_file(f"{Meta.log_path}/metrics.txt", scores)
+    model.save(f"{Meta.log_path}/last_model.pth")

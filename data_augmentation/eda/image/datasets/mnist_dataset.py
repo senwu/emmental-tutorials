@@ -1,12 +1,12 @@
 import numpy as np
 import torch
+from emmental import EmmentalDataset
+from emmental.utils.utils import pred_to_prob
+
 from eda.image.config import TASK_NORMALIZE, TASK_NUM_CLASS
 from eda.image.transforms.compose import Compose
 from eda.image.transforms.normalize import Normalize
 from eda.image.transforms.to_tensor import ToTensor
-
-from emmental.data import EmmentalDataset
-from emmental.utils.utils import pred_to_prob
 
 
 class MNISTDataset(EmmentalDataset):

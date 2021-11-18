@@ -5,11 +5,10 @@ from typing import Dict, Iterator, List, Tuple, Union
 
 import numpy as np
 import torch
+from emmental import EmmentalDataLoader
+from emmental.schedulers.scheduler import Batch, Scheduler
 from sklearn.preprocessing import normalize
 from torch import Tensor
-
-from emmental.data import EmmentalDataLoader
-from emmental.schedulers.scheduler import Scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -148,6 +147,11 @@ class AugScheduler(Scheduler):
 
                 X_dict = X_new_dict
                 Y_dict = Y_new_dict
-            yield X_dict[uid_name], X_dict, Y_dict, task_to_label_dicts[
-                data_loader_idx
-            ], data_names[data_loader_idx], splits[data_loader_idx]
+            yield Batch(
+                X_dict[uid_name],
+                X_dict,
+                Y_dict,
+                task_to_label_dicts[data_loader_idx],
+                data_names[data_loader_idx],
+                splits[data_loader_idx],
+            )

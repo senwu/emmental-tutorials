@@ -11,10 +11,7 @@ from transformers import AutoTokenizer
 from utils import write_to_file, write_to_json_file
 
 import emmental
-from emmental import Meta
-from emmental.data import EmmentalDataLoader
-from emmental.learner import EmmentalLearner
-from emmental.model import EmmentalModel
+from emmental import EmmentalDataLoader, EmmentalLearner, EmmentalModel, Meta
 from emmental.utils.parse_args import parse_args, parse_args_to_config
 from emmental.utils.utils import nullable_int, nullable_string, str2bool, str2list
 

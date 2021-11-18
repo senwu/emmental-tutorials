@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from emmental.data import EmmentalDataset
+from emmental import EmmentalDataset
 
 
 class MultiLabelDataset(EmmentalDataset):

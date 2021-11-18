@@ -4,8 +4,7 @@ from sklearn.metrics import f1_score
 from torch import nn
 from transformers import AutoModel
 
-from emmental import Action, EmmentalTask
-from emmental.scorer import Scorer
+from emmental import Action, EmmentalTask, Scorer
 
 criterion = nn.BCEWithLogitsLoss()
 

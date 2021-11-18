@@ -23,7 +23,9 @@ class MultiLabelDataset(EmmentalDataset):
         max_data_samples=None,
         max_seq_length=128,
     ):
-        df = pd.read_csv(data_path)
+        self.name = name
+        self.uid = "_uids_"
+        self.df = pd.read_csv(data_path)
         self.split = split
         self.tokenizer = tokenizer
         self.max_seq_length = max_seq_length
@@ -31,33 +33,22 @@ class MultiLabelDataset(EmmentalDataset):
         self.input_field = input_field
         self.label_fields = label_fields
 
-        X_dict = {self.input_field: []}
-        Y_dict = {"labels": []}
-
         if self.max_data_samples:
-            df = df.sample(frac=1)
-
-        for i in tqdm(range(len(df))):
-            X_dict[self.input_field].append(df.iloc[i][self.input_field])
-            Y_dict["labels"].append(
-                [float(df.iloc[i][key]) for key in self.label_fields]
-            )
-            if (
-                self.max_data_samples
-                and len(X_dict[self.input_field]) >= self.max_data_samples
-            ):
-                break
-        for key in Y_dict.keys():
-            Y_dict[key] = torch.from_numpy(np.array(Y_dict[key]))
-
-        super().__init__(name, X_dict=X_dict, Y_dict=Y_dict)
+            self.df = self.df.sample(frac=1)
 
     def __len__(self):
-        return len(self.X_dict[self.input_field])
+        return len(self.df) if self.max_data_samples is None else self.max_data_samples
 
     def __getitem__(self, index):
-        x_dict = {name: feature[index] for name, feature in self.X_dict.items()}
-        y_dict = {name: label[index] for name, label in self.Y_dict.items()}
+        x_dict = {
+            self.input_field: self.df.iloc[index][self.input_field],
+            self.uid: f"{self.name}_{index}",
+        }
+        y_dict = {
+            "labels": torch.from_numpy(
+                np.array([float(self.df.iloc[index][key]) for key in self.label_fields])
+            )
+        }
 
         inputs = self.tokenizer.encode_plus(
             x_dict[self.input_field],

@@ -4,8 +4,8 @@ from sklearn.metrics import f1_score
 from torch import nn
 from transformers import AutoModel
 
+from emmental import Action, EmmentalTask
 from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 
 criterion = nn.BCEWithLogitsLoss()
 
@@ -21,12 +21,12 @@ class FeatureExtractor(nn.Module):
         return outputs[0][:, 0, :]
 
 
-def ce_loss(module_name, immediate_ouput_dict, Y, active):
-    return criterion(immediate_ouput_dict[module_name][0], Y)
+def ce_loss(module_name, output_dict, Y):
+    return criterion(output_dict[module_name], Y)
 
 
-def output(module_name, immediate_ouput_dict):
-    return immediate_ouput_dict[module_name][0].sigmoid()
+def output(module_name, output_dict):
+    return output_dict[module_name].sigmoid()
 
 
 def multi_label_scorer(label_fields, golds, probs, preds, uids):
@@ -57,18 +57,18 @@ def create_task(args):
             }
         ),
         task_flow=[
-            {
-                "name": "feature_extractor",
-                "module": "feature_extractor",
-                "inputs": [
+            Action(
+                name="feature_extractor",
+                module="feature_extractor",
+                inputs=[
                     ("_input_", "feat_input_ids"),
                 ],
-            },
-            {
-                "name": "pred_head",
-                "module": "pred_head",
-                "inputs": [("feature_extractor", 0)],
-            },
+            ),
+            Action(
+                name="pred_head",
+                module="pred_head",
+                inputs=[("feature_extractor", 0)],
+            ),
         ],
         loss_func=partial(ce_loss, "pred_head"),
         output_func=partial(output, "pred_head"),

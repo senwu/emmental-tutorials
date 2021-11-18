@@ -54,5 +54,5 @@ Acknowledgments
 
 Much of the code in this tutorial was adapted from the `Fast AutoAugment`_. We thank all authors to provide these available online.
 
-.. _Emmental: https://github.com/SenWu/emmental
+.. _Emmental: https://github.com/senwu/emmental
 .. _Fast AutoAugment: https://github.com/kakaobrain/fast-autoaugment

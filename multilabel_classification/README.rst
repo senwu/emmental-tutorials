@@ -32,5 +32,5 @@ Acknowledgments
 
 We thank all authors to provide dataset available online.
 
-.. _Emmental: https://github.com/SenWu/emmental
+.. _Emmental: https://github.com/senwu/emmental
 .. _`Toxic Comment Classification Challenge`: https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge

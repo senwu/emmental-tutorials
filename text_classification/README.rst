@@ -29,14 +29,14 @@ details can be found in script.
 
 .. code:: bash
 
-  bash run_text_classification.sh ${TASK} [DATA] [MODEL] [LOGPATH] [SEED] [GPU_ID] [EMB]
+  bash run.sh ${TASK} [DATA] [MODEL] [LOGPATH] [SEED] [GPU_ID] [EMB]
 
 Acknowledgments
 ---------------
 
 Much of the code in this tutorial was adapted from the sru_. We thank all authors to provide these available online.
 
-.. _Emmental: https://github.com/SenWu/emmental
+.. _Emmental: https://github.com/senwu/emmental
 .. _sru: https://github.com/taolei87/sru
 .. _glove: http://nlp.stanford.edu/projects/glove/
 

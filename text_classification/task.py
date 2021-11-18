@@ -4,10 +4,8 @@ import torch.nn.functional as F
 from modules import CNN, LSTM, Average
 from torch import nn
 
-from emmental import EmmentalTaskFlowAction as Act
+from emmental import Action, EmmentalTask, Scorer
 from emmental.modules.identity_module import IdentityModule
-from emmental.scorer import Scorer
-from emmental.task import EmmentalTask
 
 
 def ce_loss(module_name, immediate_ouput_dict, Y):
@@ -48,11 +46,11 @@ def create_task(task_name, args, nclasses, emb_layer):
             }
         ),
         task_flow=[
-            Act(name="emb", module="emb", inputs=[("_input_", "feature")]),
-            Act(name="input", module="input", inputs=[("emb", 0)]),
-            Act(name="feature", module="feature", inputs=[("input", 0)]),
-            Act(name="dropout", module="dropout", inputs=[("feature", 0)]),
-            Act(
+            Action(name="emb", module="emb", inputs=[("_input_", "feature")]),
+            Action(name="input", module="input", inputs=[("emb", 0)]),
+            Action(name="feature", module="feature", inputs=[("input", 0)]),
+            Action(name="dropout", module="dropout", inputs=[("feature", 0)]),
+            Action(
                 name=f"{task_name}_pred_head",
                 module=f"{task_name}_pred_head",
                 inputs=[("dropout", 0)],

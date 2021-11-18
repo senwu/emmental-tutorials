@@ -35,6 +35,6 @@ Acknowledgments
 Much of the code in this tutorial was adapted from the reproduce-chexnet_. We thank
 all authors to provide these available online.
 
-.. _Emmental: https://github.com/SenWu/emmental
+.. _Emmental: https://github.com/senwu/emmental
 .. _reproduce-chexnet: https://github.com/jrzech/reproduce-chexnet
 .. _`CheXNet paper`: https://arxiv.org/pdf/1711.05225
